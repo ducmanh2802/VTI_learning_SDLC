@@ -1,0 +1,134 @@
+[project]
+name = "analytics"
+version = "0.1.0"
+description = "VN Stock AI Pro - Analytics service (internal API, scheduler)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic>=2",
+    "pydantic-settings",
+    "sqlalchemy>=2",
+    "asyncpg",
+    "redis>=5",
+    "httpx",
+    "tenacity",
+    "apscheduler>=3.10,<4",
+    "orjson",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "hypothesis",
+    "ruff",
+    "mypy",
+    "import-linter",
+    "testcontainers[postgres,redis]",
+    "datamodel-code-generator",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/analytics"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "N",
+    "UP",
+    "B",
+    "C4",
+    "SIM",
+    "RUF",
+    "ASYNC",
+    "S",
+    "PT",
+    "A",
+]
+ignore = [
+    "A003", # class attribute shadows a python builtin (e.g. `type` in a schema)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "PT011"]
+"src/analytics/common/errors.py" = ["S105"]
+"src/analytics/api/models_generated.py" = ["ALL"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["analytics"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["apscheduler.*", "asyncpg.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-ra --strict-markers"
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["analytics"]
+branch = false
+# Generated from the contract; its behaviour is pydantic's, not ours.
+omit = ["*/analytics/api/models_generated.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 80
+
+[tool.importlinter]
+root_package = "analytics"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Layers"
+type = "layers"
+layers = [
+    "analytics.api",
+    "analytics.ingestion | analytics.ai | analytics.research",
+    "analytics.quant | analytics.fundamentals",
+    "analytics.marketdata | analytics.providers",
+    "analytics.common",
+]
+
+[[tool.importlinter.contracts]]
+name = "quant is pure"
+type = "forbidden"
+source_modules = ["analytics.quant"]
+forbidden_modules = [
+    "analytics.providers",
+    "analytics.marketdata",
+    "httpx",
+    "redis",
+    "sqlalchemy",
+]
+
+[[tool.importlinter.contracts]]
+name = "guardrails never calls an LLM or the network"
+type = "forbidden"
+source_modules = ["analytics.ai.guardrails"]
+forbidden_modules = ["analytics.ai.llm", "httpx"]

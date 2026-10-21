@@ -16,6 +16,7 @@ properties:
     multipleOf: 100
   limitPrice:
     type: number
+    format: decimal
     multipleOf: 0.01
     description: Bắt buộc khi orderType = LO; bỏ trống khi MP.
 if:

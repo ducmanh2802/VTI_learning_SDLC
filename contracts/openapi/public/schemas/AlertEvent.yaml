@@ -19,6 +19,7 @@ properties:
     properties:
       price:
         type: number
+        format: decimal
         multipleOf: 0.01
       pct:
         type: number

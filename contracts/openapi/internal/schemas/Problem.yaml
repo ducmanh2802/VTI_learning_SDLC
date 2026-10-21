@@ -4,7 +4,8 @@ required: [type, title, status, code, correlationId]
 properties:
   type:
     type: string
-    format: uri
+    format: uri-reference
+    description: Tham chiếu URI tương đối, dạng `/errors/<mã-lỗi-viết-thường-nối-gạch>`.
   title:
     type: string
   status:

@@ -3,6 +3,7 @@ required: [price, volume]
 properties:
   price:
     type: number
+    format: decimal
     multipleOf: 0.01
   volume:
     type: integer

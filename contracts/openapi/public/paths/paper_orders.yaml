@@ -56,7 +56,7 @@ post:
             riskLotSize:
               summary: Khối lượng không phải bội số của lô
               value:
-                type: https://api.example.vn/errors/risk-lot-size
+                type: /errors/risk-lot-size
                 title: Khối lượng không hợp lệ
                 status: 422
                 detail: Khối lượng phải là bội số của 100 cổ phiếu.

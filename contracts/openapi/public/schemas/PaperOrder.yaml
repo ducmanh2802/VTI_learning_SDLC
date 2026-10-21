@@ -22,6 +22,7 @@ properties:
     minimum: 1
   limitPrice:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   status:
     type: string

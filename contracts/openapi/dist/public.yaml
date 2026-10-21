@@ -1379,7 +1379,7 @@ paths:
                 riskLotSize:
                   summary: Khối lượng không phải bội số của lô
                   value:
-                    type: https://api.example.vn/errors/risk-lot-size
+                    type: /errors/risk-lot-size
                     title: Khối lượng không hợp lệ
                     status: 422
                     detail: Khối lượng phải là bội số của 100 cổ phiếu.
@@ -2061,8 +2061,8 @@ components:
       properties:
         type:
           type: string
-          format: uri
-          description: URI mô tả loại lỗi.
+          format: uri-reference
+          description: Tham chiếu URI tương đối mô tả loại lỗi, dạng `/errors/<mã-lỗi-viết-thường-nối-gạch>` (RFC 9457 cho phép tham chiếu tương đối).
         title:
           type: string
           description: Tiêu đề ngắn, hiển thị được cho người dùng.
@@ -2117,7 +2117,7 @@ components:
               message:
                 type: string
       example:
-        type: https://api.example.vn/errors/risk-lot-size
+        type: /errors/risk-lot-size
         title: Khối lượng không hợp lệ
         status: 422
         detail: Khối lượng phải là bội số của 100 cổ phiếu.
@@ -2556,38 +2556,45 @@ components:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
           description: Giá khớp gần nhất; null khi chưa có lệnh khớp trong phiên (không dùng 0).
         ref:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
           description: Giá tham chiếu.
         ceiling:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         floor:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         open:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         high:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         low:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         volume:
           type:
@@ -2607,6 +2614,7 @@ components:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         pct:
           type:
@@ -2666,6 +2674,7 @@ components:
             properties:
               price:
                 type: number
+                format: decimal
                 multipleOf: 0.01
               volume:
                 type: integer
@@ -2683,6 +2692,7 @@ components:
             properties:
               price:
                 type: number
+                format: decimal
                 multipleOf: 0.01
               volume:
                 type: integer
@@ -2711,15 +2721,19 @@ components:
           format: date
         open:
           type: number
+          format: decimal
           multipleOf: 0.01
         high:
           type: number
+          format: decimal
           multipleOf: 0.01
         low:
           type: number
+          format: decimal
           multipleOf: 0.01
         close:
           type: number
+          format: decimal
           multipleOf: 0.01
         volume:
           type: integer
@@ -2975,6 +2989,7 @@ components:
           pattern: ^[A-Z0-9]{2,20}$
         price:
           type: number
+          format: decimal
           multipleOf: 0.01
         pct:
           type: number
@@ -3019,6 +3034,7 @@ components:
                 type: string
               value:
                 type: number
+                format: decimal
                 multipleOf: 0.01
               change:
                 type: number
@@ -3482,6 +3498,7 @@ components:
           properties:
             price:
               type: number
+              format: decimal
               multipleOf: 0.01
             pct:
               type: number
@@ -3689,6 +3706,7 @@ components:
           minimum: 1
         price:
           type: number
+          format: decimal
           multipleOf: 0.01
         fee:
           type: integer
@@ -3740,6 +3758,7 @@ components:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         status:
           type: string
@@ -3822,6 +3841,7 @@ components:
           multipleOf: 100
         limitPrice:
           type: number
+          format: decimal
           multipleOf: 0.01
           description: Bắt buộc khi orderType = LO; bỏ trống khi MP.
       if:

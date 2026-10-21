@@ -9,15 +9,19 @@ properties:
     format: date
   open:
     type: number
+    format: decimal
     multipleOf: 0.01
   high:
     type: number
+    format: decimal
     multipleOf: 0.01
   low:
     type: number
+    format: decimal
     multipleOf: 0.01
   close:
     type: number
+    format: decimal
     multipleOf: 0.01
   volume:
     type: integer

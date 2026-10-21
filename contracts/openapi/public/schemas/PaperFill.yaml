@@ -6,6 +6,7 @@ properties:
     minimum: 1
   price:
     type: number
+    format: decimal
     multipleOf: 0.01
   fee:
     type: integer
