@@ -1,0 +1,10 @@
+# Local build and test artefacts of the Analytics service.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
