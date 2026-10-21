@@ -24,6 +24,28 @@ docker compose -f infra/docker-compose.yml --env-file infra/.env down
 
 Thêm `-v` vào lệnh `down` để xóa luôn volume dữ liệu dev.
 
+## Biến môi trường
+
+`infra/.env.example` là mẫu đầy đủ. Ngoài `POSTGRES_*` và `REDIS_*`, file env còn có:
+
+- `CORE_DB_PASSWORD`: mật khẩu của login role `core_svc` (Core chỉ ghi schema `core`, `paper`, `strategy`).
+- `ANALYTICS_DB_PASSWORD`: mật khẩu của login role `analytics_svc` (Analytics chỉ ghi schema `market`, `ai`, `research`).
+
+Hai biến này được `infra/postgres/initdb/10-service-roles.sh` dùng một lần khi volume Postgres được tạo lần đầu.
+Script tạo các group role `core_rw`, `analytics_rw` (NOLOGIN) và các login role `core_svc`, `analytics_svc`.
+Đổi mật khẩu trong `.env` sau khi volume đã tồn tại **không** tự cập nhật role; phải xóa volume (`down -v`) hoặc
+`ALTER ROLE` thủ công.
+
+## Migration
+
+Service `migrator` dùng Flyway Community và chỉ chạy khi được gọi qua profile `tools`:
+
+```powershell
+docker compose -f infra/docker-compose.yml --env-file infra/.env run --rm migrator
+```
+
+Migration nằm trong `db/migrations`; xem [db/migrations/README.md](../db/migrations/README.md) để biết quy tắc đặt tên.
+
 ## Kết nối
 
 Dùng cổng localhost và mật khẩu trong `infra/.env`:

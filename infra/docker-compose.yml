@@ -11,6 +11,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      CORE_DB_PASSWORD: ${CORE_DB_PASSWORD:?CORE_DB_PASSWORD is required}
+      ANALYTICS_DB_PASSWORD: ${ANALYTICS_DB_PASSWORD:?ANALYTICS_DB_PASSWORD is required}
     command:
       - postgres
       - -c
@@ -29,6 +31,7 @@ services:
       - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./postgres/initdb:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s
@@ -47,7 +50,7 @@ services:
     command:
       - sh
       - -c
-      - redis-server --appendonly yes --appendfsync everysec --maxmemory 384mb --maxmemory-policy volatile-lru --requirepass "$${REDIS_PASSWORD}"
+      - exec redis-server --appendonly yes --appendfsync everysec --maxmemory 384mb --maxmemory-policy volatile-lru --requirepass "$${REDIS_PASSWORD}"
     ports:
       - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     volumes:
@@ -57,6 +60,25 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+    networks:
+      - internal
+
+  migrator:
+    image: flyway/flyway:11.13.3
+    profiles: ["tools"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["migrate"]
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      FLYWAY_USER: ${POSTGRES_USER}
+      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+      FLYWAY_CONNECT_RETRIES: "10"
+      FLYWAY_VALIDATE_MIGRATION_NAMING: "true"
+    volumes:
+      - ../db/migrations:/flyway/sql:ro
     networks:
       - internal
 
