@@ -22,7 +22,7 @@ Documents are in Vietnamese. Code, identifiers, comments and commit messages are
 2. Every behaviour change ships with tests. Run the WP acceptance commands before you report "done".
 3. No paid services, paid APIs or non-free dependencies (SC-005). Free/open-source only.
 4. Never commit secrets. Only `*.example` env files with placeholder values are committed.
-5. Money and prices never use floating point. Java: `long` (VND) or `BigDecimal`. Python: `int` or `Decimal`. TS: integers for VND; prices as strings or integers from the API.
+5. Money and prices never use floating point in domain logic. Java: `long` (VND) or `BigDecimal`. Python: `int` or `Decimal`. In the API, VND amounts are JSON integers and prices are JSON numbers with at most 2 decimals. The TS clients only display these values and never compute money with them.
 6. **Fail-closed:** when data is missing, stale or invalid, return an explicit "unavailable/stale" state. Never substitute 0, a fake value or an unlabeled old value (FR-030).
 7. The product **never gives investment advice**. No UI text, AI prompt or code path may recommend buying/selling/holding a symbol, state a target price, or promise profit (BRU-001). Forbidden wording in UI copy includes: "nên mua", "nên bán", "khuyến nghị", "điểm mua", "cơ hội mua", "chắc chắn tăng".
 8. **No real broker orders.** Do not implement any code that sends orders to a securities company before release R4 (SC-007).

@@ -13,9 +13,11 @@ Quy tắc chung cho agent nằm ở [AGENTS.md](../../AGENTS.md). Danh sách đ�
 
 | WP | Tên | Brief | Trạng thái |
 |---|---|---|---|
-| WP-00 | Khung repo, hạ tầng dev, CI cơ bản | [WP-00.md](WP-00.md) | Sẵn sàng giao |
-| WP-01 | Migration baseline + migrator | — | Chờ WP-00 |
-| WP-02 | Hợp đồng OpenAPI | — | Chờ WP-00 |
+| WP-00 | Khung repo, hạ tầng dev, CI cơ bản | [WP-00.md](WP-00.md) | **PASS**, đã merge vào `integration/r1` ([audit](reports/WP-00-audit.md)) |
+| WP-01 | Migration baseline, migrator, role dịch vụ | [WP-01.md](WP-01.md) | Đang giao |
+| WP-02 | Hợp đồng OpenAPI và sự kiện | [WP-02.md](WP-02.md) | Đang giao |
+
+Nhánh tích hợp: mọi WP được tạo từ `integration/r1`. WP nào đạt audit thì được merge vào `integration/r1`. Founder merge `integration/r1` vào `main` khi muốn.
 
 ## Cách chạy WP-00 với OpenCode
 
