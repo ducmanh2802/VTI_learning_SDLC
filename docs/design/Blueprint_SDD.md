@@ -10,7 +10,7 @@
 
 Hệ thống gồm hai service backend chạy trên **một máy ảo miễn phí** bằng Docker Compose. Chi phí hạ tầng R1 là 0 đồng.
 
-- **Core service (Java 21 + Spring Boot 3):** quản lý mọi trạng thái thuộc về người dùng (tài khoản, đồng ý, danh sách theo dõi, cảnh báo, giả lập và sổ cái). Đây là cổng API duy nhất mở ra Internet.
+- **Core service (Java 21 + Spring Boot 4):** quản lý mọi trạng thái thuộc về người dùng (tài khoản, đồng ý, danh sách theo dõi, cảnh báo, giả lập và sổ cái). Đây là cổng API duy nhất mở ra Internet.
 - **Analytics service (Python 3.12 + FastAPI):** thu thập dữ liệu từ nguồn miễn phí, tính định lượng, và chạy pipeline AI "dữ kiện vào, lời văn ra".
 - PostgreSQL lưu dữ liệu bền vững. Redis giữ giá mới nhất, luồng sự kiện giá và quota.
 - Web (React) được phục vụ **cùng origin** với API qua Caddy. Mobile dùng Expo.
@@ -87,7 +87,7 @@ R1 là beta kín, chi phí 0 đồng. Thiết kế đã chừa điểm mở rộ
 
 | Type | Description |
 |---|---|
-| **Technical Constraints** | SC-001 đến SC-004 và SC-010 đến SC-012 (Java 21/Spring Boot 3; Python 3.12/FastAPI; PostgreSQL 16; Redis 7; React/Vite/TS; Expo; adapter cho nhà cung cấp; múi giờ Asia/Ho_Chi_Minh; không dùng số thực dấu phẩy động cho tiền). Image Docker phải build cho cả ARM64 và AMD64 (NFR-D01) |
+| **Technical Constraints** | SC-001 đến SC-004 và SC-010 đến SC-012 (Java 21/Spring Boot 4; Python 3.12/FastAPI; PostgreSQL 16; Redis 7; React/Vite/TS; Expo; adapter cho nhà cung cấp; múi giờ Asia/Ho_Chi_Minh; không dùng số thực dấu phẩy động cho tiền). Image Docker phải build cho cả ARM64 và AMD64 (NFR-D01) |
 | **Business Constraints** | Chi phí 0 đồng cho R1 (SC-005). Dữ liệu miễn phí chỉ dùng cho phát triển và beta kín (SC-006). Không lệnh thật trước R4 (SC-007). Không khuyến nghị (BRU-001). Timeline: BRD OQ-007 |
 | **Environmental Assumptions** | VM: giả định thận trọng 2 OCPU ARM, 12 GB RAM, ≤ 200 GB block storage (SA-003; quota đã giảm năm 2026). Độ trễ VM tới nguồn dữ liệu VN < 300 ms. Uptime VM không cam kết, mục tiêu hệ thống 99,0% trong giờ giao dịch (NFR-A01) |
 | **Data Assumptions** | Khoảng 1.700 mã. Nến ngày 5 năm ≈ 2,1 triệu dòng; 20 năm ≈ 8,5 triệu dòng. Mỗi tháng tăng khoảng 36.000 dòng nến. Giá mới nhất chỉ giữ trên Redis. Nhật ký AI khoảng 1.000 dòng/ngày ở beta. Thời hạn lưu theo SRS DR-001 đến DR-009 |

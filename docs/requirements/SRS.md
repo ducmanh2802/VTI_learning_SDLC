@@ -459,7 +459,7 @@ Mô hình dữ liệu chi tiết: SDD 3.5 và [schema.sql](../design/schema.sql)
 
 | ID | Ràng buộc | Nguồn |
 |---|---|---|
-| SC-001 | Core service: Java 21 LTS, Spring Boot 3.x. | SRC-015, DEC-011 |
+| SC-001 | Core service: Java 21 LTS, Spring Boot 4.x (bản GA mới nhất; 3.x không còn được Spring Initializr phát hành tại 10/2026). | SRC-015, DEC-011 |
 | SC-002 | Analytics service: Python 3.12, FastAPI. | SRC-015 |
 | SC-003 | Cơ sở dữ liệu PostgreSQL 16; cache và luồng sự kiện dùng Redis 7 hoặc Valkey. | SDD ADR-003, ADR-004 |
 | SC-004 | Web: React 18, Vite, TypeScript, Tailwind CSS. Mobile: React Native (Expo), TypeScript. | SRC-017, DEC-008 |

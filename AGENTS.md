@@ -35,7 +35,7 @@ Documents are in Vietnamese. Code, identifiers, comments and commit messages are
 AGENTS.md                 this file
 apps/web                  React 18 + Vite + TypeScript + Tailwind (WP-20a+)
 apps/mobile               Expo / React Native + TypeScript (WP-21)
-services/core             Java 21 + Spring Boot 3, Gradle Kotlin DSL (WP-03+)
+services/core             Java 21 + Spring Boot 4, Gradle Kotlin DSL (WP-03+)
 services/analytics        Python 3.12 + FastAPI, managed with uv (WP-07+)
 contracts/openapi         public.yaml, internal.yaml (WP-02)
 contracts/events          redis-keys.md, s-quotes.schema.json (WP-02)
@@ -102,7 +102,7 @@ Local env: copy `infra/.env.example` to `infra/.env` (git-ignored) and change th
 
 ## 8. Coding conventions
 
-- **Java:** Java 21, Spring Boot 3, records for DTOs, constructor injection, no Lombok. Bean Validation on inputs. JUnit 5 + AssertJ + Testcontainers (Postgres, Redis) for integration tests.
+- **Java:** Java 21, Spring Boot 4 (Spring Framework 7, Jakarta EE 11, Jackson 3), records for DTOs, constructor injection, no Lombok. Bean Validation on inputs. JUnit 5 + AssertJ + Testcontainers (Postgres, Redis) for integration tests.
 - **Python:** 3.12, type hints everywhere (`mypy --strict` on new modules), Pydantic v2 models, `async` I/O with `httpx`/`asyncpg`. `ruff` for lint and format. `pytest` + `hypothesis` for pure functions.
 - **TypeScript:** `strict: true`, no `any`. TanStack Query for server state. `zod` validation at API boundaries. Format numbers and dates with `Intl` in the `vi-VN` locale.
 - Keep functions small. Comment only where the code cannot say it. No dead code, no commented-out code, no TODO without a WP id.
