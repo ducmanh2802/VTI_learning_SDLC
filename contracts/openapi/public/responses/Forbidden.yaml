@@ -1,0 +1,5 @@
+description: Không đủ quyền, chưa chấp thuận điều khoản, hoặc vai trò không phù hợp.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

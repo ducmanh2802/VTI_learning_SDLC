@@ -1,0 +1,27 @@
+get:
+  operationId: adminGetMetrics
+  summary: Báo cáo chỉ số tháng
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - name: month
+      in: query
+      required: true
+      schema:
+        type: string
+        pattern: '^[0-9]{4}-(0[1-9]|1[0-2])$'
+  responses:
+    '200':
+      description: Báo cáo chỉ số.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MetricsReport.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

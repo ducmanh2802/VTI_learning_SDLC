@@ -1,0 +1,39 @@
+get:
+  operationId: listWatchlists
+  summary: Danh sách theo dõi
+  tags: [watchlist]
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Các danh sách theo dõi của người dùng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/WatchlistList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+post:
+  operationId: createWatchlist
+  summary: Tạo danh sách theo dõi
+  tags: [watchlist]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/CreateWatchlistRequest.yaml'
+  responses:
+    '201':
+      description: Danh sách đã được tạo.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Watchlist.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

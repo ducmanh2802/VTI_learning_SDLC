@@ -1,0 +1,71 @@
+type: object
+description: Lỗi RFC 9457 với mã lỗi ổn định của sản phẩm.
+required:
+  - type
+  - title
+  - status
+  - code
+  - correlationId
+properties:
+  type:
+    type: string
+    format: uri
+    description: URI mô tả loại lỗi.
+  title:
+    type: string
+    description: Tiêu đề ngắn, hiển thị được cho người dùng.
+  status:
+    type: integer
+    minimum: 400
+    maximum: 599
+  detail:
+    type: string
+    description: Giải thích chi tiết, tiếng Việt.
+  code:
+    type: string
+    description: Mã lỗi ổn định (SDD 3.6.1, cộng thêm INVITE_INVALID).
+    enum:
+      - VALIDATION_ERROR
+      - UNAUTHENTICATED
+      - TOKEN_REUSED
+      - TERMS_NOT_ACCEPTED
+      - DERIVATIVE_RISK_NOT_ACKED
+      - INVITE_INVALID
+      - FORBIDDEN
+      - NOT_FOUND
+      - LIMIT_EXCEEDED
+      - RISK_LOT_SIZE
+      - RISK_PRICE_BAND
+      - RISK_TICK_SIZE
+      - RISK_INSUFFICIENT_CASH
+      - RISK_INSUFFICIENT_SHARES
+      - RISK_SESSION
+      - RISK_ORDER_LIMIT
+      - RISK_DAILY_LIMIT
+      - RISK_HALTED
+      - DATA_STALE
+      - AI_QUOTA_EXCEEDED
+      - RATE_LIMITED
+      - ACCOUNT_LOCKED
+      - INTERNAL_ERROR
+  correlationId:
+    type: string
+    format: uuid
+  errors:
+    type: array
+    description: Lỗi theo từng trường đầu vào.
+    items:
+      type: object
+      required: [field, message]
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+example:
+  type: https://api.example.vn/errors/risk-lot-size
+  title: Khối lượng không hợp lệ
+  status: 422
+  detail: Khối lượng phải là bội số của 100 cổ phiếu.
+  code: RISK_LOT_SIZE
+  correlationId: c0a8012e-8f3a-4a1b-9c2d-5e6f7a8b9c0d

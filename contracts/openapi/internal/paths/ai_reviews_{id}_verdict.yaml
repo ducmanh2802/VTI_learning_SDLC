@@ -1,0 +1,26 @@
+post:
+  operationId: internalAiReviewVerdict
+  summary: Kết luận rà soát nội dung AI
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+    - $ref: '../parameters/CorrelationId.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiReviewVerdictRequest.yaml'
+  responses:
+    '200':
+      description: Nội dung sau khi kết luận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiReview.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

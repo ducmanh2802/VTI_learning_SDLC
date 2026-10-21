@@ -1,0 +1,13 @@
+get:
+  operationId: getMyTerms
+  summary: Xem phiên bản điều khoản và trạng thái chấp thuận
+  tags: [identity]
+  responses:
+    '200':
+      description: Phiên bản hiện hành và các phiên bản đã chấp thuận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/TermsStatus.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

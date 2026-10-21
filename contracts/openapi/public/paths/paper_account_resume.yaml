@@ -1,0 +1,15 @@
+post:
+  operationId: resumePaperAccount
+  summary: Mở lại tài khoản sau HALTED
+  tags: [paper]
+  responses:
+    '200':
+      description: Tài khoản đã mở lại.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperAccount.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

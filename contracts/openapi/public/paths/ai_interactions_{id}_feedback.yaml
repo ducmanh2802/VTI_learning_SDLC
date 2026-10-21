@@ -1,0 +1,25 @@
+post:
+  operationId: submitAiFeedback
+  summary: Gửi đánh giá câu trả lời AI
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiFeedbackRequest.yaml'
+  responses:
+    '200':
+      description: Đã ghi nhận đánh giá.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MessageResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

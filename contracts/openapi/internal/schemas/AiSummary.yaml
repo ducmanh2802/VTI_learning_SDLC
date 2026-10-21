@@ -1,0 +1,23 @@
+type: object
+required: [interactionId, status, text, citations, facts, labels, provenance]
+properties:
+  interactionId:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum: [PUBLISHED, FALLBACK, REFUSED]
+  text:
+    type: [string, 'null']
+  citations:
+    type: array
+    items:
+      $ref: './Citation.yaml'
+  facts:
+    type: array
+    items:
+      $ref: './Fact.yaml'
+  labels:
+    $ref: './AiLabels.yaml'
+  provenance:
+    $ref: './Provenance.yaml'

@@ -1,0 +1,5 @@
+description: Thiếu hoặc sai X-Service-Token.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

@@ -1,0 +1,16 @@
+type: object
+required: [status, components]
+properties:
+  status:
+    type: string
+    enum: [UP, DOWN]
+  components:
+    type: object
+    required: [db, redis]
+    properties:
+      db:
+        type: string
+        enum: [UP, DOWN]
+      redis:
+        type: string
+        enum: [UP, DOWN]

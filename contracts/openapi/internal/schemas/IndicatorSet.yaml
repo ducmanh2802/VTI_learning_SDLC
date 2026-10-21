@@ -1,0 +1,30 @@
+type: object
+required: [symbol, asOf, indicators, provenance]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  asOf:
+    type: string
+    format: date-time
+  indicators:
+    type: array
+    items:
+      type: object
+      required: [code, name, rule, status]
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        value:
+          type: [number, 'null']
+        display:
+          type: [string, 'null']
+        rule:
+          type: string
+        status:
+          type: string
+          enum: [OK, INSUFFICIENT_DATA]
+  provenance:
+    $ref: './Provenance.yaml'

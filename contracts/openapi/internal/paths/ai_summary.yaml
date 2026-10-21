@@ -1,0 +1,27 @@
+post:
+  operationId: internalAiSummary
+  summary: Sinh tóm tắt AI cho một mã
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/CorrelationId.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiSummaryRequest.yaml'
+  responses:
+    '200':
+      description: Tóm tắt AI hoặc bảng dữ kiện dự phòng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiSummary.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

@@ -1,0 +1,17 @@
+get:
+  operationId: listIndicatorContent
+  summary: Nội dung giải thích chỉ báo
+  tags: [content]
+  security: []
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Các trang giải thích chỉ báo.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ContentPageList.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

@@ -1,0 +1,13 @@
+get:
+  operationId: getAiQuota
+  summary: Lượt hỏi AI còn lại
+  tags: [ai]
+  responses:
+    '200':
+      description: Hạn mức và số lượt còn lại trong ngày.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiQuota.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

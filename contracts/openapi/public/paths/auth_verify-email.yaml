@@ -1,0 +1,23 @@
+post:
+  operationId: verifyEmail
+  summary: Xác minh email
+  description: Dùng token một lần trong email xác minh để kích hoạt tài khoản.
+  tags: [identity]
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/VerifyEmailRequest.yaml'
+  responses:
+    '200':
+      description: Email đã được xác minh.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MessageResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

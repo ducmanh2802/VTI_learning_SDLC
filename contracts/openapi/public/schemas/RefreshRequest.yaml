@@ -1,0 +1,5 @@
+type: object
+description: Client WEB có thể bỏ trống body và dùng cookie `refresh_token`; client MOBILE gửi token trong body.
+properties:
+  refreshToken:
+    type: string

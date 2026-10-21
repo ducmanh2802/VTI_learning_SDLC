@@ -1,0 +1,16 @@
+post:
+  operationId: resetPaperAccount
+  summary: Đặt lại tài khoản giả lập
+  description: Lưu trữ tài khoản cũ và tạo tài khoản mới với số dư ban đầu.
+  tags: [paper]
+  responses:
+    '200':
+      description: Tài khoản mới.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperAccount.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

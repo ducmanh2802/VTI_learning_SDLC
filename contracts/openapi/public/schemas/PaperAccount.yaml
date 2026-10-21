@@ -1,0 +1,40 @@
+type: object
+required: [id, status, initialCash, cash, nav, peakNav, feeRate, sellTaxRate, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum: [ACTIVE, HALTED, ARCHIVED]
+  initialCash:
+    type: integer
+    format: int64
+  cash:
+    type: integer
+    format: int64
+    description: Tiền khả dụng sau khi trừ phần giữ chỗ của lệnh LO đang mở.
+  nav:
+    type: integer
+    format: int64
+  peakNav:
+    type: integer
+    format: int64
+  feeRate:
+    type: number
+  sellTaxRate:
+    type: number
+  maxOrderValue:
+    type: [integer, 'null']
+    format: int64
+  maxDailyValue:
+    type: [integer, 'null']
+    format: int64
+  maxDrawdownPct:
+    type: [number, 'null']
+  createdAt:
+    type: string
+    format: date-time
+  haltedAt:
+    type: [string, 'null']
+    format: date-time

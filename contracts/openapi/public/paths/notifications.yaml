@@ -1,0 +1,22 @@
+get:
+  operationId: listNotifications
+  summary: Hộp thư thông báo
+  tags: [notification]
+  parameters:
+    - name: unreadOnly
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Thông báo của người dùng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/NotificationList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

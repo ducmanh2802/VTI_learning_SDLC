@@ -1,0 +1,28 @@
+post:
+  operationId: adminLockUser
+  summary: Khóa tài khoản người dùng
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/LockUserRequest.yaml'
+  responses:
+    '200':
+      description: Người dùng sau khi khóa.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AdminUser.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

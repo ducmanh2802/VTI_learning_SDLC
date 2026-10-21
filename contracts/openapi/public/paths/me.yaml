@@ -1,0 +1,56 @@
+get:
+  operationId: getMe
+  summary: Lấy hồ sơ
+  tags: [identity]
+  responses:
+    '200':
+      description: Hồ sơ người dùng hiện tại.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/UserProfile.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+patch:
+  operationId: updateMe
+  summary: Cập nhật hồ sơ
+  tags: [identity]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/UpdateProfileRequest.yaml'
+  responses:
+    '200':
+      description: Hồ sơ sau khi cập nhật.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/UserProfile.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+delete:
+  operationId: deleteMe
+  summary: Yêu cầu xóa tài khoản
+  description: Chuyển tài khoản sang DELETION_REQUESTED và thu hồi mọi phiên.
+  tags: [identity]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/DeleteAccountRequest.yaml'
+  responses:
+    '202':
+      description: Yêu cầu xóa đã được tiếp nhận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MessageResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

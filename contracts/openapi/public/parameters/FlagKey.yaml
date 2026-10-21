@@ -1,0 +1,7 @@
+name: key
+in: path
+required: true
+description: Khóa của cờ tính năng.
+schema:
+  type: string
+  pattern: '^[a-z][a-z0-9_]*$'

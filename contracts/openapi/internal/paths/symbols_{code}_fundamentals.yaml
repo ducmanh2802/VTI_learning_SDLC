@@ -1,0 +1,20 @@
+get:
+  operationId: internalGetFundamentals
+  summary: Chỉ số cơ bản
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+    - $ref: '../parameters/CorrelationId.yaml'
+  responses:
+    '200':
+      description: Chỉ số cơ bản.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Fundamentals.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

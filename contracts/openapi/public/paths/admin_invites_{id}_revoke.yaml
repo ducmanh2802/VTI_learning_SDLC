@@ -1,0 +1,22 @@
+post:
+  operationId: adminRevokeInvite
+  summary: Thu hồi mã mời
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '200':
+      description: Mã mời sau khi thu hồi.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Invite.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

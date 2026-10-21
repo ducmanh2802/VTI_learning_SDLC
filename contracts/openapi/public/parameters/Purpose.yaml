@@ -1,0 +1,7 @@
+name: purpose
+in: path
+required: true
+description: Mã mục đích xử lý dữ liệu.
+schema:
+  type: string
+  enum: [P1, P2, P3, P4]

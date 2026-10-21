@@ -1,0 +1,17 @@
+get:
+  operationId: internalGetIngestionStatus
+  summary: Trạng thái thu thập dữ liệu
+  tags: [ops]
+  parameters:
+    - $ref: '../parameters/CorrelationId.yaml'
+  responses:
+    '200':
+      description: Trạng thái các nguồn.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/IngestionStatus.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

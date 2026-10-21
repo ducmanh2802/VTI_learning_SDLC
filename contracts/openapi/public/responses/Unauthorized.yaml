@@ -1,0 +1,5 @@
+description: Chưa xác thực hoặc token không hợp lệ.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

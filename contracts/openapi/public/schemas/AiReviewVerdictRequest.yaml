@@ -1,0 +1,9 @@
+type: object
+required: [verdict]
+properties:
+  verdict:
+    type: string
+    enum: [APPROVED, REJECTED]
+  note:
+    type: string
+    maxLength: 1000

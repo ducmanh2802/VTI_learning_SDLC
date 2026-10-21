@@ -1,0 +1,15 @@
+get:
+  operationId: getMarketState
+  summary: Trạng thái phiên
+  tags: [market]
+  responses:
+    '200':
+      description: Trạng thái phiên của từng sàn.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MarketState.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

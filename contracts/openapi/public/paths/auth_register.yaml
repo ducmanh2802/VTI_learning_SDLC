@@ -1,0 +1,27 @@
+post:
+  operationId: register
+  summary: Đăng ký tài khoản
+  description: Tạo tài khoản ở trạng thái PENDING_VERIFICATION, ghi nhận điều khoản và đồng ý ban đầu.
+  tags: [identity]
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/RegisterRequest.yaml'
+  responses:
+    '201':
+      description: Tài khoản đã được tạo; cần xác minh email.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/UserProfile.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

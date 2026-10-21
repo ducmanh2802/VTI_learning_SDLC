@@ -1,0 +1,21 @@
+post:
+  operationId: acceptTerms
+  summary: Chấp thuận phiên bản điều khoản
+  tags: [identity]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AcceptTermsRequest.yaml'
+  responses:
+    '200':
+      description: Trạng thái điều khoản sau khi chấp thuận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/TermsStatus.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

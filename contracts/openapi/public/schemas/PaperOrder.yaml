@@ -1,0 +1,58 @@
+type: object
+required: [id, clientOrderId, symbol, side, orderType, quantity, status, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  clientOrderId:
+    type: string
+    format: uuid
+    description: Giá trị của header Idempotency-Key.
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  side:
+    type: string
+    enum: [BUY, SELL]
+  orderType:
+    type: string
+    enum: [LO, MP]
+  quantity:
+    type: integer
+    minimum: 1
+  limitPrice:
+    type: [number, 'null']
+    multipleOf: 0.01
+  status:
+    type: string
+    enum: [NEW, OPEN, FILLED, CANCELLED, EXPIRED, REJECTED]
+  rejectCode:
+    type: [string, 'null']
+  fill:
+    oneOf:
+      - $ref: './PaperFill.yaml'
+      - type: 'null'
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+example:
+  id: 3f2a1b0c-9d8e-4f7a-8b6c-5d4e3f2a1b0c
+  clientOrderId: b7e6d5c4-3a2b-4c1d-9e8f-7a6b5c4d3e2f
+  symbol: FPT
+  side: BUY
+  orderType: LO
+  quantity: 100
+  limitPrice: 124000
+  status: FILLED
+  rejectCode: null
+  fill:
+    quantity: 100
+    price: 124000
+    fee: 18600
+    tax: 0
+    filledAt: '2026-10-20T10:20:05+07:00'
+  createdAt: '2026-10-20T10:20:04+07:00'
+  updatedAt: '2026-10-20T10:20:05+07:00'

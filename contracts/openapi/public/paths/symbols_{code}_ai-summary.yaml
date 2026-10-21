@@ -1,0 +1,71 @@
+get:
+  operationId: getAiSummary
+  summary: Tóm tắt AI cho một mã
+  description: Chỉ mô tả dữ kiện hệ thống tính; không khuyến nghị mua/bán và không nêu giá mục tiêu.
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+  responses:
+    '200':
+      description: Tóm tắt AI kèm dẫn nguồn.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiSummary.yaml'
+          examples:
+            published:
+              summary: Nội dung đã qua kiểm tra.
+              value:
+                interactionId: 6f1c2a44-6f0e-4f6a-9d7e-2b8c1d0e3f45
+                status: PUBLISHED
+                text: Giá đóng cửa 125.300 đồng [F1], tăng 1,21% [F2].
+                citations:
+                  - id: F1
+                    label: Giá đóng cửa
+                    value: '125300'
+                    unit: VND
+                    source: KBS
+                    asOf: '2026-10-20T15:00:00+07:00'
+                facts:
+                  - id: F1
+                    label: Giá đóng cửa
+                    value: '125300'
+                    unit: VND
+                    source: KBS
+                    asOf: '2026-10-20T15:00:00+07:00'
+                labels:
+                  aiGenerated: true
+                  notAdvice: true
+                provenance:
+                  source: Tính toán
+                  asOf: '2026-10-20T15:30:00+07:00'
+                  kind: CALCULATED
+                  stale: false
+            fallback:
+              summary: Kiểm tra thất bại, trả bảng dữ kiện.
+              value:
+                interactionId: 8a2d3b55-7a1f-4b7b-8e8f-3c9d2e1f4a56
+                status: FALLBACK
+                text: null
+                citations: []
+                facts:
+                  - id: F1
+                    label: Giá đóng cửa
+                    value: '125300'
+                    unit: VND
+                    source: KBS
+                    asOf: '2026-10-20T15:00:00+07:00'
+                labels:
+                  aiGenerated: true
+                  notAdvice: true
+                provenance:
+                  source: Tính toán
+                  asOf: '2026-10-20T15:30:00+07:00'
+                  kind: CALCULATED
+                  stale: false
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

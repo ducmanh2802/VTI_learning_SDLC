@@ -1,0 +1,7 @@
+name: X-Correlation-Id
+in: header
+required: true
+description: Mã tương quan do Core sinh, dùng để nối log giữa hai dịch vụ.
+schema:
+  type: string
+  format: uuid

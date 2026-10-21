@@ -1,0 +1,27 @@
+get:
+  operationId: adminListAiReviews
+  summary: Danh sách nội dung AI cần rà soát
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - name: status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [PENDING, APPROVED, REJECTED]
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Danh sách nội dung AI.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiReviewList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

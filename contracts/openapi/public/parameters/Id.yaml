@@ -1,0 +1,7 @@
+name: id
+in: path
+required: true
+description: Định danh UUID của tài nguyên.
+schema:
+  type: string
+  format: uuid

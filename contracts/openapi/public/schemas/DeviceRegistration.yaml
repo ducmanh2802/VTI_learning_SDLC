@@ -1,0 +1,10 @@
+type: object
+required: [platform, token]
+properties:
+  platform:
+    type: string
+    enum: [EXPO, WEB_PUSH]
+  token:
+    type: string
+    description: Expo push token hoặc JSON subscription của Web Push.
+    minLength: 16

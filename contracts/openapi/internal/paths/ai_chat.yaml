@@ -1,0 +1,27 @@
+post:
+  operationId: internalAiChat
+  summary: Hỏi đáp AI
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/CorrelationId.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiChatRequest.yaml'
+  responses:
+    '200':
+      description: Kết quả trả lời, có cờ hoàn quota khi lỗi hệ thống.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiChatResult.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

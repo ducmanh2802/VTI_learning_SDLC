@@ -1,0 +1,19 @@
+type: object
+required: [email, password, client]
+properties:
+  email:
+    type: string
+    format: email
+    maxLength: 254
+  password:
+    type: string
+    minLength: 10
+    maxLength: 128
+  totp:
+    type: string
+    description: Mã TOTP 6 chữ số, bắt buộc với tài khoản quản trị.
+    pattern: '^[0-9]{6}$'
+  client:
+    type: string
+    enum: [WEB, MOBILE]
+    description: WEB nhận refresh token qua cookie; MOBILE nhận trong body.

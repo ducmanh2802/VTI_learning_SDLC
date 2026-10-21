@@ -1,0 +1,16 @@
+type: object
+required: [id, code, maxUses, expiresAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  code:
+    type: string
+    description: Mã gốc chỉ trả về đúng một lần khi tạo.
+  label:
+    type: [string, 'null']
+  maxUses:
+    type: integer
+  expiresAt:
+    type: string
+    format: date-time

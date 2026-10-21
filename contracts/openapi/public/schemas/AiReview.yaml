@@ -1,0 +1,24 @@
+type: object
+required: [id, interactionId, status, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  interactionId:
+    type: string
+    format: uuid
+  symbol:
+    type: [string, 'null']
+  status:
+    type: string
+    enum: [PENDING, APPROVED, REJECTED]
+  text:
+    type: [string, 'null']
+  verdictNote:
+    type: [string, 'null']
+  reviewedAt:
+    type: [string, 'null']
+    format: date-time
+  createdAt:
+    type: string
+    format: date-time

@@ -1,0 +1,25 @@
+put:
+  operationId: updateMyConsent
+  summary: Thay đổi đồng ý cho một mục đích
+  tags: [consent]
+  parameters:
+    - $ref: '../parameters/Purpose.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/UpdateConsentRequest.yaml'
+  responses:
+    '200':
+      description: Trạng thái đồng ý sau khi thay đổi.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Consent.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'

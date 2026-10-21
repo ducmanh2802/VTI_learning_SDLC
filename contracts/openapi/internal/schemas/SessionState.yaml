@@ -1,0 +1,3 @@
+type: string
+description: Trạng thái phiên giao dịch (SRS FR-024).
+enum: [PRE_OPEN, ATO, CONTINUOUS, LUNCH_BREAK, ATC, POST_CLOSE, CLOSED]

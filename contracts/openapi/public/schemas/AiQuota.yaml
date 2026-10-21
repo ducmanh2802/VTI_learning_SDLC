@@ -1,0 +1,15 @@
+type: object
+required: [limit, used, remaining, resetsAt]
+properties:
+  limit:
+    type: integer
+    minimum: 0
+  used:
+    type: integer
+    minimum: 0
+  remaining:
+    type: integer
+    minimum: 0
+  resetsAt:
+    type: string
+    format: date-time

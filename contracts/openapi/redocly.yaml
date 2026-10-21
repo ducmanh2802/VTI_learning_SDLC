@@ -1,0 +1,15 @@
+apis:
+  public:
+    root: public.yaml
+  internal:
+    root: internal.yaml
+extends:
+  - recommended
+rules:
+  operation-operationId: error
+  operation-operationId-unique: error
+  operation-summary: error
+  operation-4xx-response: error
+  security-defined: error
+  no-unused-components: warn
+  info-license: off

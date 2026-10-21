@@ -1,0 +1,35 @@
+type: object
+required: [weight, dir, provenance, cells, unavailable]
+properties:
+  weight:
+    type: string
+    enum: [VALUE, COUNT, ADVANCERS]
+  dir:
+    type: string
+    enum: [ALL, UP, DOWN]
+  provenance:
+    $ref: './Provenance.yaml'
+  unavailable:
+    type: array
+    description: Mục thiếu do nguồn dữ liệu, ví dụ treemap_value.
+    items:
+      type: string
+  cells:
+    type: array
+    items:
+      type: object
+      required: [symbol, name, exchange, size, pct]
+      properties:
+        symbol:
+          type: string
+          pattern: '^[A-Z0-9]{2,20}$'
+        name:
+          type: string
+        exchange:
+          type: string
+          enum: [HOSE, HNX, UPCOM, DERIV]
+        size:
+          type: number
+          description: Giá trị dùng để tính diện tích ô, phụ thuộc `weight`.
+        pct:
+          type: number

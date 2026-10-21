@@ -1,0 +1,79 @@
+type: object
+required: [provenance, unavailable, indices, breadth, topMovers, cards]
+properties:
+  provenance:
+    $ref: './Provenance.yaml'
+  unavailable:
+    type: array
+    items:
+      type: string
+  indices:
+    type: array
+    items:
+      type: object
+      required: [code, name, value, change, pct]
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        value:
+          type: number
+          multipleOf: 0.01
+        change:
+          type: number
+        pct:
+          type: number
+  breadth:
+    type: object
+    required: [advances, declines, unchanged, total]
+    properties:
+      advances:
+        type: integer
+        minimum: 0
+      declines:
+        type: integer
+        minimum: 0
+      unchanged:
+        type: integer
+        minimum: 0
+      total:
+        type: integer
+        minimum: 0
+      pctAboveMa20:
+        type: [number, 'null']
+      pctAboveMa50:
+        type: [number, 'null']
+      pctAboveMa200:
+        type: [number, 'null']
+  topMovers:
+    type: object
+    required: [gainers, losers, volumeSpike]
+    properties:
+      gainers:
+        type: array
+        maxItems: 10
+        items:
+          $ref: './Mover.yaml'
+      losers:
+        type: array
+        maxItems: 10
+        items:
+          $ref: './Mover.yaml'
+      volumeSpike:
+        type: array
+        maxItems: 10
+        items:
+          $ref: './Mover.yaml'
+  cards:
+    type: array
+    items:
+      type: object
+      required: [id, title, text]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        text:
+          type: string

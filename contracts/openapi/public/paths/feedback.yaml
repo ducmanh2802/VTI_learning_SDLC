@@ -1,0 +1,23 @@
+post:
+  operationId: submitFeedback
+  summary: Gửi phản hồi hoặc khiếu nại
+  tags: [support]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/FeedbackRequest.yaml'
+  responses:
+    '201':
+      description: Phiếu đã được tạo.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/FeedbackTicket.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

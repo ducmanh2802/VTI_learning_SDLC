@@ -1,0 +1,26 @@
+post:
+  operationId: askAi
+  summary: Hỏi đáp AI
+  description: Trả lời bằng dữ kiện hệ thống tính; từ chối câu hỏi xin lời khuyên đầu tư.
+  tags: [ai]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiChatRequest.yaml'
+  responses:
+    '200':
+      description: Kết quả trả lời hoặc từ chối.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AiChatResult.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

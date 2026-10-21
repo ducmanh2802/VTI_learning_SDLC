@@ -1,0 +1,21 @@
+patch:
+  operationId: updatePaperAccountSettings
+  summary: Cập nhật hạn mức tài khoản giả lập
+  tags: [paper]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/PaperAccountSettings.yaml'
+  responses:
+    '200':
+      description: Tài khoản sau khi cập nhật.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperAccount.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

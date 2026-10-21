@@ -1,0 +1,5 @@
+description: Dịch vụ hoặc dữ liệu thị trường không khả dụng (fail-closed).
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'
