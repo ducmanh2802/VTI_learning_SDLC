@@ -82,6 +82,70 @@ services:
     networks:
       - internal
 
+  analytics:
+    build:
+      context: ../services/analytics
+    image: vnstockai/analytics:local
+    profiles: ["app"]
+    restart: unless-stopped
+    mem_limit: 2500m
+    command:
+      - uvicorn
+      - analytics.api.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8090"
+      - --workers
+      - "2"
+    environment:
+      ANALYTICS_DB_URL: postgresql+asyncpg://analytics_svc:${ANALYTICS_DB_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      SERVICE_TOKEN: ${SERVICE_TOKEN:?SERVICE_TOKEN is required}
+      LOG_LEVEL: ${ANALYTICS_LOG_LEVEL:-INFO}
+      ENV: ${APP_ENV:-dev}
+    ports:
+      - "127.0.0.1:${ANALYTICS_PORT:-8090}:8090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/internal/v1/health/live', timeout=3)
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    networks:
+      - internal
+
+  analytics-scheduler:
+    build:
+      context: ../services/analytics
+    image: vnstockai/analytics:local
+    profiles: ["app"]
+    restart: unless-stopped
+    mem_limit: 512m
+    command: ["python", "-m", "analytics.ingestion.scheduler"]
+    environment:
+      ANALYTICS_DB_URL: postgresql+asyncpg://analytics_svc:${ANALYTICS_DB_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      SERVICE_TOKEN: ${SERVICE_TOKEN:?SERVICE_TOKEN is required}
+      LOG_LEVEL: ${ANALYTICS_LOG_LEVEL:-INFO}
+      ENV: ${APP_ENV:-dev}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+
 networks:
   internal:
     driver: bridge
