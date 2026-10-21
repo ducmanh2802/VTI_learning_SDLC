@@ -198,7 +198,7 @@ flowchart LR
 | US-010 | Là Người dùng, tôi muốn đăng xuất khỏi mọi thiết bị cùng lúc, để chặn truy cập khi mất máy. | P1 | FR-007 | BR-004 |
 | US-074 | Là Người dùng, tôi muốn tải về dữ liệu cá nhân, để biết hệ thống lưu gì về mình. | P1 | FR-017 | CON-003 |
 | US-075 | Là Người dùng, tôi muốn đặt tên hiển thị và kênh nhận cảnh báo mặc định, để cá nhân hóa trải nghiệm. | P1 | FR-010 | SN-006 |
-| US-058 | Là Khách được mời, tôi muốn đăng ký bằng mã mời, để tham gia beta kín. | P0 | **CR-02** (FR-019 mới) | SC-006, RSK-014 |
+| US-058 | Là Khách được mời, tôi muốn đăng ký bằng mã mời, để tham gia beta kín. | P0 | FR-019, FR-217 (CR-02) | SC-006, RSK-014 |
 
 **Tiêu chí chấp nhận (P0)**
 
@@ -582,7 +582,8 @@ Mỗi story ở Mục 3 ghi FR và BR tương ứng. Bảng sau là tóm tắt t
 | BR-033 | US-034 đến US-038 | FR-080 đến FR-097 |
 | BR-026, BR-029 đến BR-031, BR-040, BR-041, BR-050 | US-039 đến US-047 | FR-100 đến FR-115 |
 | BR-059, BR-069 đến BR-072 | US-052, US-053, US-055 đến US-057 | FR-180, FR-213, FR-215, FR-220 đến FR-222 |
-| SC-006, RSK-014 | US-058 | CR-02 (FR-019 mới) |
+| SC-006, RSK-014 | US-058 | FR-019, FR-217 (CR-02) |
+| BR-072 | (đo OKR, Mục 6.2) | FR-223, FR-224 (CR-01) |
 | BR-021 đến BR-064 (R2–R4) | US-059 đến US-073 | FR-095, FR-116, FR-117, FR-120 đến FR-204 |
 
 ### 8.2 Độ phủ
@@ -596,6 +597,8 @@ Mỗi story ở Mục 3 ghi FR và BR tương ứng. Bảng sau là tóm tắt t
 ---
 
 ## 9. Change request cần đồng bộ xuống SRS, SDD, schema
+
+> **Trạng thái (2026-10-21):** CR-01 và CR-02 **đã được áp dụng** vào SRS v0.2 (FR-019, FR-217, FR-223, FR-224, DR-010, DR-011), SDD v0.2 (module `telemetry`, endpoint `/events`, `/admin/invites`, mã lỗi `INVITE_INVALID`) và `schema.sql` (`core.invites`, `core.invite_redemptions`, `core.product_events`, cờ `beta_invite_only`). Schema đã được chạy thử trên PostgreSQL 16.
 
 | ID | Thay đổi | Lý do | Ảnh hưởng | Đề xuất |
 |---|---|---|---|---|
@@ -640,7 +643,7 @@ Các câu hỏi đang mở từ trước: BRD OQ-006, OQ-007, OQ-018, OQ-031, OQ
 | 17 | Dependencies | Đạt | 5, 7 |
 | 18 | Unambiguous Language | Đạt: không còn từ mơ hồ, mọi ngưỡng có số | Toàn tài liệu |
 | 19 | Traceable & Numbered | Đạt | US-xxx, LG-xx, CR-xx, Mục 8 |
-| 20 | Consistent | Đạt có điều kiện: CR-01 và CR-02 phải được áp dụng xuống SRS/SDD để không mâu thuẫn | 9 |
+| 20 | Consistent | Đạt: CR-01 và CR-02 đã được áp dụng xuống SRS v0.2 và SDD v0.2 | 9 |
 
 ---
 
@@ -651,5 +654,5 @@ Các câu hỏi đang mở từ trước: BRD OQ-006, OQ-007, OQ-018, OQ-031, OQ
 Điều kiện:
 
 1. Founder chốt OKR (OQ-056).
-2. Áp dụng CR-01 và CR-02 vào SRS v0.2, SDD và schema.
+2. ~~Áp dụng CR-01 và CR-02 vào SRS v0.2, SDD và schema.~~ Đã xong (2026-10-21).
 3. Đạt LG-10 (pháp lý) trước khi mời người dùng ngoài nhóm.

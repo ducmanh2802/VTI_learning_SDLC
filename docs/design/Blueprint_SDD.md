@@ -56,10 +56,10 @@ flowchart LR
 | Thuộc tính | Giá trị |
 |---|---|
 | **System Name** | VN Stock AI Pro (tên làm việc; BRD OQ-002) |
-| **SDD Version** | 0.1 |
+| **SDD Version** | 0.2 |
 | **Document Date** | 2026-10-21 |
 | **Document Owner** | Lead Architect: [TBD: BRD OQ-003]. Bản nháp do Claude (vai trò kiến trúc sư và kiểm duyệt) soạn |
-| **Revision History** | 0.1 · 2026-10-21 · Claude · Bản đầu tiên từ SRS v0.1 |
+| **Revision History** | 0.1 · 2026-10-21 · Claude · Bản đầu tiên từ SRS v0.1. 0.2 · 2026-10-21 · Claude · Áp dụng CR-01 (module `telemetry`, `POST /events`, bảng `core.product_events`) và CR-02 (mã mời: FR-019, FR-217, bảng `core.invites`) |
 
 **Mô tả.** VN Stock AI Pro là nền tảng công cụ phân tích chứng khoán Việt Nam:
 
@@ -238,6 +238,7 @@ flowchart TB
 | DE-04.10 | `core.admin` | Module | DE-04 | Quản lý người dùng, phát hành điều khoản, rà soát AI (qua Analytics), cờ tính năng, báo cáo chỉ số | identity, consent, marketgw |
 | DE-04.11 | `core.audit` | Module | DE-04 | Nhật ký kiểm toán chỉ ghi thêm (lắng nghe sự kiện từ mọi module) | shared |
 | DE-04.12 | `core.support` | Module | DE-04 | Phiếu phản hồi/khiếu nại, banner sự cố | notification(api) |
+| DE-04.13 | `core.telemetry` | Module | DE-04 | Nhận và lưu sự kiện sử dụng ẩn danh khi người dùng đồng ý P3 (FR-223, FR-224) | consent(api), identity(api) |
 | DE-05 | `services/analytics` | FastAPI | Backend | Dữ liệu, định lượng, AI; chỉ nhận gọi nội bộ | DE-06, DE-07, nguồn, LLM |
 | DE-05.01 | `analytics.api` | Package | DE-05 | Router nội bộ `/internal/v1`, xác thực bằng token dịch vụ | các package bên dưới |
 | DE-05.02 | `analytics.providers` | Package | DE-05 | Port `MarketDataProvider`; adapter vnstock, KBS, VPS; giới hạn tần suất; gộp truy vấn; chuyển nguồn | common |
@@ -274,6 +275,7 @@ flowchart TD
     Core --> C9["admin"]
     Core --> C10["audit"]
     Core --> C11["support"]
+    Core --> C12["telemetry"]
     Ana --> A1["api"]
     Ana --> A2["providers"]
     Ana --> A3["ingestion"]
@@ -505,6 +507,7 @@ Các module chỉ gọi nhau qua package `..api` hoặc qua Spring application e
 | paper | shared, quotes.api, marketgw.api |
 | admin | shared, identity.api, consent.api, marketgw.api |
 | support | shared, notification.api |
+| telemetry | shared, consent.api, identity.api |
 | audit | shared (chỉ lắng nghe event) |
 
 #### 3.4.2 Quy tắc phụ thuộc trong Analytics (import-linter)
@@ -565,7 +568,7 @@ Phiên bản cụ thể được chốt ở WP-00 bằng lockfile (Gradle versio
 
 | Schema | Bên ghi duy nhất | Bên đọc | Nội dung |
 |---|---|---|---|
-| `core` | Core | Core | Người dùng, token, điều khoản, đồng ý, danh sách theo dõi, cảnh báo, thông báo, outbox, audit, phản hồi, cờ tính năng |
+| `core` | Core | Core | Người dùng, token, mã mời, điều khoản, đồng ý, danh sách theo dõi, cảnh báo, thông báo, outbox, audit, phản hồi, cờ tính năng, sự kiện sử dụng |
 | `paper` | Core | Core | Tài khoản giả lập, lệnh, khớp, bút toán, vị thế |
 | `market` | Analytics | Analytics; Core đọc `symbols`, `trading_calendar` | Danh mục mã, lịch giao dịch, nến ngày, báo cáo tài chính, chỉ số, lần chạy ingest, cách ly |
 | `ai` | Analytics | Analytics | Mẫu prompt, nhật ký tương tác, tóm tắt, phản hồi, rà soát |
@@ -591,6 +594,8 @@ erDiagram
     USERS ||--o{ NOTIFICATIONS : receives
     NOTIFICATIONS ||--o{ NOTIFICATION_OUTBOX : delivers
     USERS ||--o{ DEVICES : registers
+    INVITES ||--o{ INVITE_REDEMPTIONS : redeemed
+    USERS ||--o| INVITE_REDEMPTIONS : joined_with
     USERS ||--|| PAPER_ACCOUNTS : has
     PAPER_ACCOUNTS ||--o{ PAPER_ORDERS : places
     PAPER_ORDERS ||--o| PAPER_FILLS : fills
@@ -654,7 +659,7 @@ Xác thực:
 
 | Method | Path | Auth | Mô tả | FR |
 |---|---|---|---|---|
-| POST | `/auth/register` | — | Đăng ký kèm chấp thuận điều khoản và đồng ý | FR-001, FR-002, FR-011, FR-013 |
+| POST | `/auth/register` | — | Đăng ký kèm chấp thuận điều khoản, đồng ý và `inviteCode` (bắt buộc khi cờ `beta_invite_only` bật) | FR-001, FR-002, FR-011, FR-013, FR-019 |
 | POST | `/auth/verify-email` | — | Xác minh email `{token}` | FR-003 |
 | POST | `/auth/resend-verification` | — | Gửi lại email xác minh | FR-003 |
 | POST | `/auth/login` | — | `{email, password, totp?}` → token | FR-004, FR-005, FR-018 |
@@ -705,8 +710,10 @@ Xác thực:
 | GET | `/paper/positions` | user | Vị thế | FR-112 |
 | GET | `/paper/ledger?from&to` | user | Bút toán | FR-110 |
 | POST | `/feedback` | user | Phiếu phản hồi | FR-220 |
+| POST | `/events` | user | Lô sự kiện sử dụng `{events: [{event, occurredAt, platform, sessionId?, properties}]}` (≤ 50). Trả 202 kể cả khi bỏ qua vì chưa có đồng ý P3 | FR-223, FR-224 |
 | GET | `/content/indicators` · `/content/limits` · `/content/fill-rules` · `/content/status` | — | Nội dung tĩnh: giải thích, giới hạn gói, quy tắc giả lập, banner sự cố | FR-054, FR-180, FR-109, FR-221 |
 | GET / POST | `/admin/users` · `/admin/users/{id}/lock` · `/unlock` | admin | Quản lý người dùng | FR-210 |
+| GET / POST | `/admin/invites` · `/admin/invites/{id}/revoke` | admin | Tạo mã mời (trả mã đúng một lần), liệt kê, thu hồi | FR-217 |
 | POST | `/admin/terms` | admin | Phát hành phiên bản điều khoản | FR-211 |
 | GET / POST | `/admin/ai/reviews` · `/admin/ai/reviews/{id}/verdict` | admin | Rà soát AI | FR-212 |
 | GET | `/admin/ops/ingestion` | admin | Trạng thái ingest | FR-213 |
@@ -731,6 +738,7 @@ Xác thực:
 | `VALIDATION_ERROR` | 400 | — |
 | `UNAUTHENTICATED` / `TOKEN_REUSED` | 401 | FR-004, NFR-S04 |
 | `TERMS_NOT_ACCEPTED` / `DERIVATIVE_RISK_NOT_ACKED` | 403 | FR-011, FR-015 |
+| `INVITE_INVALID` | 403 | FR-019 |
 | `FORBIDDEN` | 403 | FR-181 |
 | `NOT_FOUND` | 404 | — |
 | `LIMIT_EXCEEDED` (giới hạn gói) | 409 | FR-080, FR-090, FR-180 |
@@ -1457,6 +1465,7 @@ Số liệu là mức công bố bởi nguồn thứ cấp tại 10/2026; phải
 | DE-04.10 | admin | Module | Vận hành | FR-210 đến FR-215 | FR-018 |
 | DE-04.11 | audit | Module | Kiểm toán | FR-216 | NFR-S08 |
 | DE-04.12 | support | Module | Hỗ trợ | FR-220, FR-221 | — |
+| DE-04.13 | telemetry | Module | Đo hành vi sử dụng (ẩn danh, có đồng ý) | FR-223, FR-224 | NFR-PR01 |
 | DE-05.02 | providers | Package | Truy cập nguồn | IR-001, IR-002, FR-032, FR-033 | SC-006, SC-010 |
 | DE-05.03 | ingestion | Package | Thu thập theo lịch | FR-020, FR-022, FR-024 đến FR-027 | NFR-O03 |
 | DE-05.04 | marketdata | Package | Lưu và kiểm tra dữ liệu | FR-028, FR-031 | FR-030 |
@@ -1586,7 +1595,7 @@ Xem 3.10.2 (RAM, CPU, lưu trữ theo container) và 3.10.3 (quota dịch vụ n
 
 | Phần tử | View | FR | NFR / QAS | UC |
 |---|---|---|---|---|
-| identity | 3.3.1, SD-01, SD-02, ST-01 | FR-001 đến FR-009, FR-018 | NFR-S01 đến NFR-S05, QAS-05 | UC-001, UC-002, UC-003 |
+| identity | 3.3.1, SD-01, SD-02, ST-01 | FR-001 đến FR-009, FR-018, FR-019 | NFR-S01 đến NFR-S05, QAS-05 | UC-001, UC-002, UC-003 |
 | consent | SD-01, SD-07 | FR-011 đến FR-017 | NFR-PR01 | UC-004, UC-013, UC-016 |
 | marketgw | 3.6.1, SD-04, SD-05 | FR-021 đến FR-023, FR-050 đến FR-054, FR-060, FR-062, FR-181 | NFR-P01, NFR-P02 | UC-005, UC-006, UC-007 |
 | quotes | SD-03, 3.5.3 | FR-030 | NFR-A03 | UC-010, UC-011 |
@@ -1594,7 +1603,8 @@ Xem 3.10.2 (RAM, CPU, lưu trữ theo container) và 3.10.3 (quota dịch vụ n
 | alerting | SD-03, ST-02, ALG-09 | FR-090 đến FR-095 | — | UC-009, UC-010 |
 | notification | SD-01, SD-03, 3.11 | FR-096, FR-097 | — | UC-010 |
 | paper | SD-06, ST-03, ST-04, ALG-10 đến ALG-13 | FR-100 đến FR-117 | NFR-P05, NFR-A04, QAS-02 | UC-011, UC-012, UC-017, UC-021 |
-| admin | 3.6.1 | FR-210 đến FR-215 | — | UC-015 |
+| admin | 3.6.1 | FR-210 đến FR-215, FR-217 | — | UC-015 |
+| telemetry | 3.6.1 | FR-223, FR-224 | NFR-PR01 | — |
 | audit | 3.11 | FR-216 | NFR-S08 | (mọi UC) |
 | support | 3.6.1 | FR-220, FR-221 | — | — |
 | providers | 3.3.2, ALG-03, ADR-007 | FR-032, FR-033 | QAS-03, QAS-10 | UC-014 |
@@ -1740,9 +1750,9 @@ flowchart LR
 | WP-01 | Migration baseline từ schema.sql + container migrator | db, infra | 3.5, ADR-015 | WP-00 | S | Tiêu chuẩn |
 | WP-02 | Hợp đồng OpenAPI public và internal + sinh client/server stub | contracts | 3.6 | WP-00 | M | Tiêu chuẩn |
 | WP-03 | Khung Core: module, lỗi RFC 9457, bảo mật, correlation id, health | services/core | 3.2, 3.4.1 | WP-01, WP-02 | M | Tiêu chuẩn |
-| WP-04 | Identity: đăng ký, xác minh, đăng nhập, refresh xoay vòng, khóa tạm, quên/đổi mật khẩu, adapter email (dev ghi log) | core.identity, core.notification (email) | FR-001 đến FR-009, SD-01, SD-02 | WP-03 | L | **Sâu** |
+| WP-04 | Identity: đăng ký (kèm mã mời), xác minh, đăng nhập, refresh xoay vòng, khóa tạm, quên/đổi mật khẩu, adapter email (dev ghi log) | core.identity, core.notification (email) | FR-001 đến FR-009, FR-019, SD-01, SD-02 | WP-03 | L | **Sâu** |
 | WP-05 | Consent: điều khoản, đồng ý, rủi ro phái sinh, xuất/xóa dữ liệu + job xóa | core.consent | FR-011 đến FR-017, SD-07 | WP-04 | M | **Sâu** |
-| WP-06 | Admin: TOTP, quản lý người dùng, phát hành điều khoản, cờ tính năng, audit | core.admin, core.audit | FR-018, FR-210, FR-211, FR-214, FR-216 | WP-04 | M | Tiêu chuẩn |
+| WP-06 | Admin: TOTP, quản lý người dùng, mã mời, phát hành điều khoản, cờ tính năng, audit | core.admin, core.audit | FR-018, FR-210, FR-211, FR-214, FR-216, FR-217 | WP-04 | M | Tiêu chuẩn |
 | WP-07 | Khung Analytics: FastAPI, cấu hình, token dịch vụ, log JSON, scheduler riêng | services/analytics | 3.2, 3.4.2 | WP-01, WP-02 | M | Tiêu chuẩn |
 | WP-08 | Port provider + adapter vnstock + giới hạn tần suất + single-flight + provenance | analytics.providers | IR-001, IR-002, FR-028, FR-033, ALG-03 | WP-07 | M | Tiêu chuẩn |
 | WP-09 | Adapter KBS, VPS (port ý tưởng từ dự án cũ) + chuyển nguồn | analytics.providers | FR-032 | WP-08 | M | Tiêu chuẩn |
@@ -1764,7 +1774,7 @@ flowchart LR
 | WP-20e | Web: Cài đặt/Quyền riêng tư, Quản trị (rà soát AI, ingest, cờ, chỉ số) | apps/web | UC-013, UC-015, FR-212, FR-213, FR-215 | WP-05, WP-06 | M | Tiêu chuẩn |
 | WP-21 | Mobile (Expo): đăng nhập, theo dõi, chi tiết mã, AI, push, giả lập; build APK | apps/mobile | UI-002, NFR-U04 | WP-20a đến WP-20d | L | Tiêu chuẩn |
 | WP-22 | Hạ tầng: tạo VM Oracle, bootstrap, Caddy + DuckDNS, deploy pipeline, backup/khôi phục, giám sát uptime, diễn tập | infra, .github | 3.10, NFR-A02, NFR-D02, NFR-O02 | WP-00 | M | Tiêu chuẩn |
-| WP-23 | Báo cáo chỉ số tháng, banner sự cố, phản hồi/khiếu nại | core.admin, core.support | FR-215, FR-220, FR-221 | WP-06 | S | Tiêu chuẩn |
+| WP-23 | Báo cáo chỉ số tháng, banner sự cố, phản hồi/khiếu nại, sự kiện sử dụng | core.admin, core.support, core.telemetry | FR-215, FR-220, FR-221, FR-223, FR-224 | WP-06 | M | Tiêu chuẩn |
 | WP-24 | Kiểm thử R1: E2E web (Playwright), mobile (Maestro), axe, tải 100 người dùng, chạy bộ red-team, checklist phát hành | toàn repo | NFR-P01 đến NFR-P07, NFR-U02, NFR-AI01 | tất cả | L | **Sâu** |
 
 **Thứ tự đề xuất** (các nhánh song song khi có thể):

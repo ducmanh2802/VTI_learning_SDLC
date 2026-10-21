@@ -336,6 +336,41 @@ CREATE TABLE core.content_pages (
     updated_by  uuid REFERENCES core.users (id)
 );
 
+-- Mã mời cho beta kín (FR-019, FR-217; CR-02). Chỉ lưu SHA-256 của mã; mã gốc hiển thị đúng một lần khi tạo.
+CREATE TABLE core.invites (
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code_hash   bytea NOT NULL UNIQUE,
+    label       text CHECK (length(label) <= 80),
+    max_uses    integer NOT NULL CHECK (max_uses BETWEEN 1 AND 1000),
+    used_count  integer NOT NULL DEFAULT 0 CHECK (used_count >= 0),
+    expires_at  timestamptz NOT NULL,
+    revoked_at  timestamptz,
+    created_by  uuid REFERENCES core.users (id),
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT invites_usage CHECK (used_count <= max_uses)
+);
+
+CREATE TABLE core.invite_redemptions (
+    invite_id    uuid NOT NULL REFERENCES core.invites (id),
+    user_id      uuid NOT NULL UNIQUE REFERENCES core.users (id),
+    redeemed_at  timestamptz NOT NULL DEFAULT now(),
+    PRIMARY KEY (invite_id, user_id)
+);
+
+-- Sự kiện sử dụng ẩn danh, chỉ khi có đồng ý P3 (FR-223, FR-224; CR-01). Giữ 13 tháng (DR-010).
+CREATE TABLE core.product_events (
+    id           bigserial PRIMARY KEY,
+    occurred_at  timestamptz NOT NULL,
+    received_at  timestamptz NOT NULL DEFAULT now(),
+    user_ref     text NOT NULL,              -- HMAC(user_secret, userId), như ai.interactions
+    session_id   uuid,
+    event        text NOT NULL CHECK (event ~ '^[a-z]+(_[a-z]+)+$'),
+    platform     text NOT NULL CHECK (platform IN ('web', 'android', 'pwa', 'server')),
+    properties   jsonb NOT NULL DEFAULT '{}'::jsonb CHECK (pg_column_size(properties) <= 2048)
+);
+CREATE INDEX product_events_time ON core.product_events (occurred_at);
+CREATE INDEX product_events_event ON core.product_events (event, occurred_at);
+
 -- =============================================================================
 -- paper (Core service): giả lập, RiskGuard, sổ cái (FR-100 đến FR-117, ALG-10 đến ALG-13)
 -- =============================================================================
@@ -765,6 +800,7 @@ INSERT INTO core.consent_purposes (code, description, required, default_granted)
 
 -- FR-214: tính năng nhạy cảm pháp lý mặc định tắt (BRD OQ-031).
 INSERT INTO core.feature_flags (key, enabled, description) VALUES
+    ('beta_invite_only', true, 'FR-019 (CR-02): đăng ký bắt buộc có mã mời trong beta kín'),
     ('market_regime', false, 'FR-045: trạng thái thị trường và hỗ trợ/kháng cự'),
     ('market_scores', false, 'FR-045: điểm rủi ro gãy xu hướng và sức mạnh hồi phục; chờ BRD OQ-031'),
     ('ai_summary',    true,  'FR-060: tóm tắt AI theo mã'),

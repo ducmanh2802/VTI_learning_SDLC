@@ -2,7 +2,7 @@
 
 **Hệ thống:** VN Stock AI Pro (tên làm việc, chờ tên chính thức: BRD `OQ-002`)
 **Mã tài liệu:** SRS-AITS-001
-**Phiên bản:** 0.1
+**Phiên bản:** 0.2 (0.1 → 0.2: áp dụng CR-01 sự kiện sử dụng, CR-02 beta kín có mã mời, từ PRD-AITS-001)
 **Trạng thái:** Draft
 **Chuẩn áp dụng:** ISO/IEC/IEEE 29148-2018, mục 9.5 (nội dung SRS). Đặc tả use case theo UML 2.0 và `UseCase_Document_UML2.0_Checklist.xlsx`
 **Đầu vào:** [BRD.md](BRD.md) v0.3 (BRD-AITS-001)
@@ -206,6 +206,7 @@ Dùng glossary của BRD Mục 13.1, bổ sung:
 | FR-016 | Hệ thống **phải** cho phép người dùng yêu cầu xóa tài khoản sau khi nhập lại mật khẩu. Tài khoản chuyển sang `DELETION_REQUESTED` và bị đăng xuất mọi nơi. Trong ≤ 30 ngày (đề xuất, BRD OQ-034), dữ liệu cá nhân bị xóa hoặc ẩn danh hóa. Bản ghi phải giữ theo luật (nhật ký kiểm toán, nhật ký AI) chỉ còn tham chiếu ẩn danh. | BR-067 | R1 | Must | Test |
 | FR-017 | Hệ thống **nên** cho phép người dùng tải về dữ liệu cá nhân của mình dạng JSON. | Derived (CON-003: quyền truy cập của chủ thể dữ liệu) | R1 | Should | Test |
 | FR-018 | Tài khoản quản trị viên **phải** đăng nhập bằng mật khẩu kèm mã TOTP (xác thực hai lớp). | NFR-S01 | R1 | Must | Test |
+| FR-019 | Khi cờ `beta_invite_only` bật (mặc định bật ở R1), hệ thống **phải** chỉ cho phép đăng ký với mã mời hợp lệ (chưa bị thu hồi, còn hạn, còn lượt). Mỗi lần đăng ký thành công trừ 1 lượt của mã. Mã không hợp lệ trả lỗi `INVITE_INVALID` mà không tiết lộ lý do cụ thể. | SC-006, RSK-014 (CR-02) | R1 | Must | Test |
 
 #### 3.2.2 M02: Dữ liệu thị trường
 
@@ -400,6 +401,7 @@ Dùng glossary của BRD Mục 13.1, bổ sung:
 | FR-214 | Quản trị viên **phải** bật/tắt cờ tính năng (ví dụ FR-045); mỗi thay đổi được ghi nhật ký kiểm toán. | BR-075, OQ-031 | R1 | Must | Test |
 | FR-215 | Hệ thống **phải** lập báo cáo tháng cho các chỉ số đo được ở R1: MET-001, MET-008, MET-010, MET-011, MET-012. | BR-072 | R1 | Must | Inspection |
 | FR-216 | Hệ thống **phải** ghi nhật ký kiểm toán (không sửa được) cho các sự kiện: đăng nhập, đăng nhập thất bại, đổi hoặc đặt lại mật khẩu, chấp thuận điều khoản, đồng ý và rút đồng ý, xóa tài khoản, lệnh giả lập, mọi hành động của quản trị viên. | BR-046 (Derived), NFR-S08 | R1 | Must | Inspection |
+| FR-217 | Quản trị viên **phải** tạo, xem và thu hồi mã mời, mỗi mã có nhãn, số lượt tối đa (1–1.000) và hạn dùng. Mã chỉ hiển thị một lần khi tạo; hệ thống chỉ lưu bản băm. Mỗi thao tác ghi nhật ký kiểm toán. | SC-006 (CR-02) | R1 | Must | Test |
 
 #### 3.2.16 M18: Hỗ trợ và vận hành
 
@@ -408,6 +410,8 @@ Dùng glossary của BRD Mục 13.1, bổ sung:
 | FR-220 | Hệ thống **nên** cho phép người dùng gửi phản hồi hoặc khiếu nại, nhận mã phiếu, và nhận trả lời qua email trong ≤ 3 ngày làm việc (đề xuất cho BRD OQ-036). | BR-071 | R1 | Should | Inspection |
 | FR-221 | Khi có sự cố ảnh hưởng chức năng giao dịch hoặc dữ liệu trong phiên, hệ thống **nên** hiển thị thông báo sự cố cho người dùng trong ≤ 15 phút (đề xuất cho BRD OQ-025). | BR-070 | R1 | Should | Demonstration |
 | FR-222 | Mỗi service **phải** cung cấp endpoint kiểm tra sức khỏe (sống / sẵn sàng) cho giám sát. | BR-069 | R1 | Must | Test |
+| FR-223 | Khi người dùng đã đồng ý mục đích P3, hệ thống **nên** ghi sự kiện sử dụng theo danh mục PRD 6.2. Mỗi sự kiện chỉ chứa mã người dùng ẩn danh (`userRef`), tên sự kiện, nền tảng, thời điểm và thuộc tính không có dữ liệu cá nhân. Khi chưa có đồng ý P3, sự kiện bị bỏ qua (không lưu). | BR-072 (CR-01) | R1 | Should | Test |
+| FR-224 | Hệ thống **nên** nhận sự kiện từ client theo lô (≤ 50 sự kiện mỗi lần gửi, mỗi sự kiện ≤ 2 KB), từ chối tên sự kiện ngoài danh mục cho phép. | BR-072 (CR-01) | R1 | Should | Test |
 
 ### 3.3 Yêu cầu khả dụng
 
@@ -446,6 +450,8 @@ Dùng glossary của BRD Mục 13.1, bổ sung:
 | DR-007 | Sổ cái và lệnh giả lập | Core | Thời gian tồn tại của tài khoản; khi đặt lại tài khoản thì lưu trữ, không xóa | BR-030 |
 | DR-008 | Thông báo | Core | 90 ngày | FR-096 |
 | DR-009 | Bản sao lưu | Hạ tầng | 7 bản hằng ngày + 4 bản hằng tuần; mã hóa trước khi đưa ra ngoài | NFR-A02 |
+| DR-010 | Sự kiện sử dụng (FR-223) | Core | 13 tháng; chỉ có `userRef` ẩn danh | BR-072 |
+| DR-011 | Mã mời và lượt dùng mã (FR-019, FR-217) | Core | Đến hết R1 + 12 tháng | SC-006 |
 
 Mô hình dữ liệu chi tiết: SDD 3.5 và [schema.sql](../design/schema.sql).
 
@@ -543,7 +549,7 @@ Mô hình dữ liệu chi tiết: SDD 3.5 và [schema.sql](../design/schema.sql)
 
 | ID | Tên (động từ + bổ ngữ) | Tác nhân chính | Release | FR chính |
 |---|---|---|---|---|
-| UC-001 | Đăng ký tài khoản | Khách | R1 | FR-001 đến FR-003 |
+| UC-001 | Đăng ký tài khoản | Khách | R1 | FR-001 đến FR-003, FR-019 |
 | UC-002 | Đăng nhập | Người dùng, Quản trị viên | R1 | FR-004, FR-005, FR-018 |
 | UC-003 | Đặt lại mật khẩu | Người dùng | R1 | FR-008 |
 | UC-004 | Chấp thuận điều khoản và đồng ý xử lý dữ liệu | Người dùng | R1 | FR-011 đến FR-014 |
@@ -647,8 +653,8 @@ flowchart LR
 
 **Luồng chính**
 
-1. Khách nhập email, mật khẩu và nhập lại mật khẩu.
-2. Hệ thống kiểm tra định dạng email và chính sách mật khẩu (FR-002).
+1. Khách nhập email, mật khẩu, nhập lại mật khẩu, và mã mời (khi chế độ beta kín bật, FR-019).
+2. Hệ thống kiểm tra định dạng email, chính sách mật khẩu (FR-002) và mã mời (FR-019).
 3. Hệ thống hiển thị điều khoản, chính sách dữ liệu và các mục đích đồng ý («include» UC-004).
 4. Khách chấp thuận điều khoản, chọn các mục đích tùy chọn, rồi gửi.
 5. Hệ thống tạo tài khoản `PENDING_VERIFICATION`, lưu mật khẩu băm, ghi chấp thuận và đồng ý.
@@ -665,6 +671,7 @@ flowchart LR
 **Luồng ngoại lệ**
 
 - 2a. Email sai định dạng hoặc mật khẩu không đạt chính sách: hệ thống báo lỗi ngay tại trường, quay lại bước 1.
+- 2b. Mã mời không hợp lệ, hết hạn, hết lượt hoặc đã bị thu hồi: hệ thống báo "Cần mã mời hợp lệ để tham gia beta" (`INVITE_INVALID`), không tạo tài khoản, quay lại bước 1.
 - 5a. Email đã tồn tại: hệ thống hiển thị cùng thông báo như bước 6 (không tiết lộ email đã tồn tại) và gửi email "đã có tài khoản" tới địa chỉ đó.
 - 6a. Dịch vụ email lỗi: hệ thống đưa email vào hàng đợi thử lại (tối đa 3 lần) và cho phép Khách gửi lại.
 - 8a. Token hết hạn hoặc đã dùng: hệ thống báo và đề nghị gửi lại (7a).
@@ -673,7 +680,7 @@ flowchart LR
 |---|---|
 | Quy tắc nghiệp vụ | BRU-010; FR-002 (10–128 ký tự, không thuộc danh sách phổ biến) |
 | Yêu cầu phi chức năng | NFR-S02, NFR-S05; email gửi trong ≤ 60 giây |
-| Dữ liệu | email (bắt buộc, ≤ 254 ký tự), password (bắt buộc), terms_version (bắt buộc), consents: P1 = true, P2/P3/P4 (boolean) |
+| Dữ liệu | email (bắt buộc, ≤ 254 ký tự), password (bắt buộc), invite_code (bắt buộc khi beta kín bật), terms_version (bắt buộc), consents: P1 = true, P2/P3/P4 (boolean) |
 | Giả định | Dịch vụ email miễn phí đủ hạn mức cho beta kín (OQ-047) |
 | Vấn đề mở | OQ-047; BRD OQ-034 (thời hạn giữ tài khoản chưa xác minh) |
 
@@ -1093,7 +1100,8 @@ flowchart LR
 | BR-069 | NFR-A01, NFR-A02, FR-222 | R1 |
 | BR-070 | FR-221 | R1 |
 | BR-071 | FR-220 | R1 |
-| BR-072 | FR-215 | R1 |
+| BR-072 | FR-215, FR-223, FR-224 | R1 |
+| SC-006 (ràng buộc, không phải BR) | FR-019, FR-217 | R1 |
 | BR-073 | FR-027, FR-040, FR-041, FR-042, FR-044 | R1 |
 | BR-074 | FR-043 | R1 |
 | BR-075 | FR-045, FR-214 | R1 |
