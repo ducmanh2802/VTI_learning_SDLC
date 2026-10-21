@@ -501,7 +501,7 @@ Các module chỉ gọi nhau qua package `..api` hoặc qua Spring application e
 | consent | shared, identity.api |
 | notification | shared, consent.api |
 | quotes | shared |
-| marketgw | shared, identity.api |
+| marketgw | shared, identity.api, consent.api (cổng rủi ro phái sinh FR-015; bổ sung khi viết WP-13b) |
 | watchlist | shared, marketgw.api |
 | alerting | shared, quotes.api, notification.api, marketgw.api |
 | paper | shared, quotes.api, marketgw.api |
