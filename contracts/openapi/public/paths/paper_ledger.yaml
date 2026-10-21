@@ -1,0 +1,30 @@
+get:
+  operationId: listPaperLedger
+  summary: Bút toán sổ cái
+  tags: [paper]
+  parameters:
+    - name: from
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Bút toán sổ cái.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/LedgerEntryList.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

@@ -1,0 +1,19 @@
+delete:
+  operationId: cancelPaperOrder
+  summary: Hủy lệnh LO đang mở
+  tags: [paper]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '200':
+      description: Lệnh sau khi hủy.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperOrder.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

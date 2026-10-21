@@ -1,0 +1,22 @@
+post:
+  operationId: submitProductEvents
+  summary: Gửi lô sự kiện sử dụng
+  description: |
+    Chỉ lưu khi người dùng đã đồng ý P3. Luôn trả 202, kể cả khi lô bị bỏ qua
+    vì chưa có đồng ý hoặc vì tên sự kiện ngoài danh mục.
+  tags: [telemetry]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/EventsBatch.yaml'
+  responses:
+    '202':
+      description: Lô sự kiện đã được tiếp nhận.
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

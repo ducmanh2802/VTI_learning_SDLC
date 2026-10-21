@@ -1,0 +1,14 @@
+get:
+  operationId: internalHealthLive
+  summary: Kiểm tra tiến trình còn sống
+  tags: [support]
+  security: []
+  responses:
+    '200':
+      description: Tiến trình đang chạy.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Health.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

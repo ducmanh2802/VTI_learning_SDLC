@@ -1,0 +1,14 @@
+get:
+  operationId: getLimitsContent
+  summary: Nội dung giới hạn gói
+  tags: [content]
+  security: []
+  responses:
+    '200':
+      description: Trang giới hạn của gói hiện hành.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ContentPage.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

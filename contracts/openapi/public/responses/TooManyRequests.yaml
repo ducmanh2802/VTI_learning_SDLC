@@ -1,0 +1,5 @@
+description: Vượt giới hạn tần suất hoặc hạn mức sử dụng.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

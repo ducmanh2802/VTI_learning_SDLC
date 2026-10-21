@@ -1,0 +1,34 @@
+post:
+  operationId: login
+  summary: Đăng nhập
+  description: |
+    Trả access token 15 phút và refresh token 30 ngày. Client WEB nhận refresh token
+    trong cookie HttpOnly; client MOBILE nhận trong body. Tài khoản quản trị phải gửi TOTP.
+  tags: [identity]
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/LoginRequest.yaml'
+  responses:
+    '200':
+      description: Đăng nhập thành công.
+      headers:
+        Set-Cookie:
+          description: Cookie `refresh_token` cho client WEB.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/TokenResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '423':
+      $ref: '../responses/Locked.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

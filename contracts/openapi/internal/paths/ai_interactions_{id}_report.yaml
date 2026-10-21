@@ -1,0 +1,22 @@
+post:
+  operationId: internalAiReport
+  summary: Chuyển tiếp báo cáo nội dung AI
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+    - $ref: '../parameters/CorrelationId.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiReportRequest.yaml'
+  responses:
+    '202':
+      description: Đã tiếp nhận.
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

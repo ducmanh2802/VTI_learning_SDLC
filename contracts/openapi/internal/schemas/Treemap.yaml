@@ -1,0 +1,33 @@
+type: object
+required: [weight, dir, provenance, cells, unavailable]
+properties:
+  weight:
+    type: string
+    enum: [VALUE, COUNT, ADVANCERS]
+  dir:
+    type: string
+    enum: [ALL, UP, DOWN]
+  provenance:
+    $ref: './Provenance.yaml'
+  unavailable:
+    type: array
+    items:
+      type: string
+  cells:
+    type: array
+    items:
+      type: object
+      required: [symbol, name, exchange, size, pct]
+      properties:
+        symbol:
+          type: string
+          pattern: '^[A-Z0-9]{2,20}$'
+        name:
+          type: string
+        exchange:
+          type: string
+          enum: [HOSE, HNX, UPCOM, DERIV]
+        size:
+          type: number
+        pct:
+          type: number

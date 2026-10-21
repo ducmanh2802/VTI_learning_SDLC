@@ -1,0 +1,5 @@
+description: Không tìm thấy tài nguyên.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

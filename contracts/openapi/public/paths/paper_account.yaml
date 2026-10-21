@@ -1,0 +1,14 @@
+get:
+  operationId: getPaperAccount
+  summary: Tài khoản giả lập
+  description: Trả số dư, NAV, trạng thái và hạn mức.
+  tags: [paper]
+  responses:
+    '200':
+      description: Tài khoản giả lập hiện tại.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperAccount.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

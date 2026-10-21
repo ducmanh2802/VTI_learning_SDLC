@@ -1,0 +1,185 @@
+openapi: 3.1.0
+info:
+  title: VN Stock AI Pro - Public API
+  version: 0.1.0
+  description: |
+    API công khai của Core service, phục vụ dưới `/api/v1`.
+    Mọi lỗi 4xx/5xx dùng `application/problem+json` theo RFC 9457 với trường `code` ổn định.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: identity
+    description: Đăng ký, đăng nhập, hồ sơ và điều khoản.
+  - name: consent
+    description: Đồng ý xử lý dữ liệu cá nhân.
+  - name: market
+    description: Danh mục mã, giá, nến, chỉ báo và tổng quan thị trường.
+  - name: ai
+    description: Tóm tắt và hỏi đáp AI có dẫn nguồn.
+  - name: watchlist
+    description: Danh sách theo dõi.
+  - name: alerting
+    description: Cảnh báo giá và khối lượng.
+  - name: notification
+    description: Hộp thư và thiết bị nhận push.
+  - name: paper
+    description: Giao dịch giả lập.
+  - name: support
+    description: Phản hồi, trạng thái dịch vụ và sức khỏe hệ thống.
+  - name: content
+    description: Nội dung tĩnh do quản trị viên quản lý.
+  - name: admin
+    description: Chức năng quản trị, yêu cầu vai trò ADMIN.
+  - name: telemetry
+    description: Sự kiện sử dụng ẩn danh.
+paths:
+  /auth/register:
+    $ref: './public/paths/auth_register.yaml'
+  /auth/verify-email:
+    $ref: './public/paths/auth_verify-email.yaml'
+  /auth/resend-verification:
+    $ref: './public/paths/auth_resend-verification.yaml'
+  /auth/login:
+    $ref: './public/paths/auth_login.yaml'
+  /auth/refresh:
+    $ref: './public/paths/auth_refresh.yaml'
+  /auth/logout:
+    $ref: './public/paths/auth_logout.yaml'
+  /auth/logout-all:
+    $ref: './public/paths/auth_logout-all.yaml'
+  /auth/password/forgot:
+    $ref: './public/paths/auth_password_forgot.yaml'
+  /auth/password/reset:
+    $ref: './public/paths/auth_password_reset.yaml'
+  /auth/password/change:
+    $ref: './public/paths/auth_password_change.yaml'
+  /me:
+    $ref: './public/paths/me.yaml'
+  /me/terms:
+    $ref: './public/paths/me_terms.yaml'
+  /me/terms/accept:
+    $ref: './public/paths/me_terms_accept.yaml'
+  /me/derivative-risk/ack:
+    $ref: './public/paths/me_derivative-risk_ack.yaml'
+  /me/consents:
+    $ref: './public/paths/me_consents.yaml'
+  /me/consents/{purpose}:
+    $ref: './public/paths/me_consents_{purpose}.yaml'
+  /me/export:
+    $ref: './public/paths/me_export.yaml'
+  /symbols:
+    $ref: './public/paths/symbols.yaml'
+  /symbols/{code}:
+    $ref: './public/paths/symbols_{code}.yaml'
+  /symbols/{code}/quote:
+    $ref: './public/paths/symbols_{code}_quote.yaml'
+  /symbols/{code}/orderbook:
+    $ref: './public/paths/symbols_{code}_orderbook.yaml'
+  /symbols/{code}/bars:
+    $ref: './public/paths/symbols_{code}_bars.yaml'
+  /symbols/{code}/indicators:
+    $ref: './public/paths/symbols_{code}_indicators.yaml'
+  /symbols/{code}/fundamentals:
+    $ref: './public/paths/symbols_{code}_fundamentals.yaml'
+  /symbols/{code}/ai-summary:
+    $ref: './public/paths/symbols_{code}_ai-summary.yaml'
+  /market/overview:
+    $ref: './public/paths/market_overview.yaml'
+  /market/treemap:
+    $ref: './public/paths/market_treemap.yaml'
+  /market/state:
+    $ref: './public/paths/market_state.yaml'
+  /ai/chat:
+    $ref: './public/paths/ai_chat.yaml'
+  /ai/quota:
+    $ref: './public/paths/ai_quota.yaml'
+  /ai/interactions/{id}/feedback:
+    $ref: './public/paths/ai_interactions_{id}_feedback.yaml'
+  /ai/interactions/{id}/report:
+    $ref: './public/paths/ai_interactions_{id}_report.yaml'
+  /watchlists:
+    $ref: './public/paths/watchlists.yaml'
+  /watchlists/{id}:
+    $ref: './public/paths/watchlists_{id}.yaml'
+  /watchlists/{id}/items/{symbol}:
+    $ref: './public/paths/watchlists_{id}_items_{symbol}.yaml'
+  /alerts:
+    $ref: './public/paths/alerts.yaml'
+  /alerts/{id}:
+    $ref: './public/paths/alerts_{id}.yaml'
+  /alerts/events:
+    $ref: './public/paths/alerts_events.yaml'
+  /notifications:
+    $ref: './public/paths/notifications.yaml'
+  /notifications/{id}/read:
+    $ref: './public/paths/notifications_{id}_read.yaml'
+  /devices:
+    $ref: './public/paths/devices.yaml'
+  /devices/{id}:
+    $ref: './public/paths/devices_{id}.yaml'
+  /paper/account:
+    $ref: './public/paths/paper_account.yaml'
+  /paper/account/settings:
+    $ref: './public/paths/paper_account_settings.yaml'
+  /paper/account/reset:
+    $ref: './public/paths/paper_account_reset.yaml'
+  /paper/account/resume:
+    $ref: './public/paths/paper_account_resume.yaml'
+  /paper/orders:
+    $ref: './public/paths/paper_orders.yaml'
+  /paper/orders/{id}:
+    $ref: './public/paths/paper_orders_{id}.yaml'
+  /paper/positions:
+    $ref: './public/paths/paper_positions.yaml'
+  /paper/ledger:
+    $ref: './public/paths/paper_ledger.yaml'
+  /feedback:
+    $ref: './public/paths/feedback.yaml'
+  /events:
+    $ref: './public/paths/events.yaml'
+  /content/indicators:
+    $ref: './public/paths/content_indicators.yaml'
+  /content/limits:
+    $ref: './public/paths/content_limits.yaml'
+  /content/fill-rules:
+    $ref: './public/paths/content_fill-rules.yaml'
+  /content/status:
+    $ref: './public/paths/content_status.yaml'
+  /admin/users:
+    $ref: './public/paths/admin_users.yaml'
+  /admin/users/{id}/lock:
+    $ref: './public/paths/admin_users_{id}_lock.yaml'
+  /admin/users/{id}/unlock:
+    $ref: './public/paths/admin_users_{id}_unlock.yaml'
+  /admin/invites:
+    $ref: './public/paths/admin_invites.yaml'
+  /admin/invites/{id}/revoke:
+    $ref: './public/paths/admin_invites_{id}_revoke.yaml'
+  /admin/terms:
+    $ref: './public/paths/admin_terms.yaml'
+  /admin/ai/reviews:
+    $ref: './public/paths/admin_ai_reviews.yaml'
+  /admin/ai/reviews/{id}/verdict:
+    $ref: './public/paths/admin_ai_reviews_{id}_verdict.yaml'
+  /admin/ops/ingestion:
+    $ref: './public/paths/admin_ops_ingestion.yaml'
+  /admin/flags:
+    $ref: './public/paths/admin_flags.yaml'
+  /admin/flags/{key}:
+    $ref: './public/paths/admin_flags_{key}.yaml'
+  /admin/metrics:
+    $ref: './public/paths/admin_metrics.yaml'
+  /health:
+    $ref: './public/paths/health.yaml'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    refreshCookie:
+      type: apiKey
+      in: cookie
+      name: refresh_token

@@ -1,0 +1,15 @@
+type: object
+required: [accessToken, tokenType, expiresIn]
+properties:
+  accessToken:
+    type: string
+  tokenType:
+    type: string
+    enum: [Bearer]
+  expiresIn:
+    type: integer
+    description: Thời hạn access token tính bằng giây.
+    minimum: 1
+  refreshToken:
+    type: [string, 'null']
+    description: Chỉ trả về cho client MOBILE; WEB dùng cookie `refresh_token`.

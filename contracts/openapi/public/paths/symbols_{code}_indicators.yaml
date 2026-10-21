@@ -1,0 +1,34 @@
+get:
+  operationId: getIndicators
+  summary: Chỉ báo kỹ thuật
+  description: Trả chỉ báo kèm câu mô tả quy tắc trung tính; chỉ báo thiếu dữ liệu có value = null.
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+    - name: from
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+  responses:
+    '200':
+      description: Tập chỉ báo.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/IndicatorSet.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

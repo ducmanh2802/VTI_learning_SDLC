@@ -1,0 +1,1513 @@
+openapi: 3.1.0
+info:
+  title: VN Stock AI Pro - Internal API
+  version: 0.1.0
+  description: |
+    API nội bộ của Analytics service, chỉ lắng nghe trên mạng Docker `internal`.
+    Mọi request phải có header `X-Service-Token` và nên có `X-Correlation-Id`.
+servers:
+  - url: /internal/v1
+security:
+  - serviceToken: []
+tags:
+  - name: market
+    description: Danh mục mã, giá, nến, chỉ báo và tổng quan thị trường.
+  - name: ai
+    description: Tóm tắt, hỏi đáp, phản hồi và rà soát AI.
+  - name: ops
+    description: Vận hành và sức khỏe dịch vụ.
+  - name: support
+    description: Sức khỏe dịch vụ.
+paths:
+  /symbols:
+    get:
+      operationId: internalListSymbols
+      summary: Danh mục mã
+      tags:
+        - market
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 40
+        - name: exchange
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - HOSE
+              - HNX
+              - UPCOM
+              - DERIV
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Danh sách mã.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SymbolList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /symbols/{code}:
+    get:
+      operationId: internalGetSymbol
+      summary: Thông tin mã
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/SymbolCode'
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Thông tin mã.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symbol'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /symbols/{code}/quote:
+    get:
+      operationId: internalGetQuote
+      summary: Giá mới nhất
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/SymbolCode'
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Giá mới nhất kèm provenance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /symbols/{code}/orderbook:
+    get:
+      operationId: internalGetOrderBook
+      summary: Sổ lệnh ba bước giá
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/SymbolCode'
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Sổ lệnh hiện tại.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderBook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /symbols/{code}/bars:
+    get:
+      operationId: internalGetBars
+      summary: Nến giá
+      description: |
+        Trả toàn bộ nến trong khoảng [from, to], sắp xếp tăng dần theo ngày, không phân trang.
+        Khoảng tối đa 5 năm; vượt quá trả 400 VALIDATION_ERROR.
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/SymbolCode'
+        - name: interval
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - D
+              - W
+              - M
+            default: D
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Danh sách nến.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BarList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /symbols/{code}/indicators:
+    get:
+      operationId: internalGetIndicators
+      summary: Chỉ báo kỹ thuật
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/SymbolCode'
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Tập chỉ báo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndicatorSet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /symbols/{code}/fundamentals:
+    get:
+      operationId: internalGetFundamentals
+      summary: Chỉ số cơ bản
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/SymbolCode'
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Chỉ số cơ bản.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fundamentals'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /market/overview:
+    get:
+      operationId: internalGetMarketOverview
+      summary: Tổng quan thị trường
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Tổng quan thị trường.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketOverview'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /market/treemap:
+    get:
+      operationId: internalGetMarketTreemap
+      summary: Bản đồ nhiệt
+      tags:
+        - market
+      parameters:
+        - name: weight
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - VALUE
+              - COUNT
+              - ADVANCERS
+            default: VALUE
+        - name: dir
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - ALL
+              - UP
+              - DOWN
+            default: ALL
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Dữ liệu bản đồ nhiệt.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Treemap'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /market/state:
+    get:
+      operationId: internalGetMarketState
+      summary: Trạng thái phiên
+      tags:
+        - market
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Trạng thái phiên.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketState'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /ai/summary:
+    post:
+      operationId: internalAiSummary
+      summary: Sinh tóm tắt AI cho một mã
+      tags:
+        - ai
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiSummaryRequest'
+      responses:
+        '200':
+          description: Tóm tắt AI hoặc bảng dữ kiện dự phòng.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /ai/chat:
+    post:
+      operationId: internalAiChat
+      summary: Hỏi đáp AI
+      tags:
+        - ai
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiChatRequest'
+      responses:
+        '200':
+          description: Kết quả trả lời, có cờ hoàn quota khi lỗi hệ thống.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiChatResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /ai/interactions/{id}/feedback:
+    post:
+      operationId: internalAiFeedback
+      summary: Chuyển tiếp phản hồi câu trả lời AI
+      tags:
+        - ai
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/CorrelationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiFeedbackRequest'
+      responses:
+        '204':
+          description: Đã ghi nhận.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /ai/interactions/{id}/report:
+    post:
+      operationId: internalAiReport
+      summary: Chuyển tiếp báo cáo nội dung AI
+      tags:
+        - ai
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/CorrelationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiReportRequest'
+      responses:
+        '202':
+          description: Đã tiếp nhận.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /ai/reviews:
+    get:
+      operationId: internalListAiReviews
+      summary: Danh sách nội dung AI cần rà soát
+      tags:
+        - ai
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - APPROVED
+              - REJECTED
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Danh sách nội dung AI.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiReviewList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /ai/reviews/{id}/verdict:
+    post:
+      operationId: internalAiReviewVerdict
+      summary: Kết luận rà soát nội dung AI
+      tags:
+        - ai
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/CorrelationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiReviewVerdictRequest'
+      responses:
+        '200':
+          description: Nội dung sau khi kết luận.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiReview'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /ops/ingestion:
+    get:
+      operationId: internalGetIngestionStatus
+      summary: Trạng thái thu thập dữ liệu
+      tags:
+        - ops
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+      responses:
+        '200':
+          description: Trạng thái các nguồn.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestionStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /health/live:
+    get:
+      operationId: internalHealthLive
+      summary: Kiểm tra tiến trình còn sống
+      tags:
+        - support
+      security: []
+      responses:
+        '200':
+          description: Tiến trình đang chạy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /health/ready:
+    get:
+      operationId: internalHealthReady
+      summary: Kiểm tra sẵn sàng phục vụ
+      tags:
+        - support
+      security: []
+      responses:
+        '200':
+          description: Đã kết nối được các phụ thuộc.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+components:
+  securitySchemes:
+    serviceToken:
+      type: apiKey
+      in: header
+      name: X-Service-Token
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Số phần tử tối đa trên một trang.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Con trỏ trang kế tiếp do server trả về.
+      schema:
+        type: string
+    CorrelationId:
+      name: X-Correlation-Id
+      in: header
+      required: true
+      description: Mã tương quan do Core sinh, dùng để nối log giữa hai dịch vụ.
+      schema:
+        type: string
+        format: uuid
+    SymbolCode:
+      name: code
+      in: path
+      required: true
+      description: Mã chứng khoán viết hoa.
+      schema:
+        type: string
+        pattern: ^[A-Z0-9]{2,20}$
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Định danh UUID của tài nguyên.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    Symbol:
+      type: object
+      required:
+        - code
+        - name
+        - exchange
+        - kind
+        - lotSize
+        - isActive
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        name:
+          type: string
+        exchange:
+          type: string
+          enum:
+            - HOSE
+            - HNX
+            - UPCOM
+            - DERIV
+        kind:
+          type: string
+          enum:
+            - STOCK
+            - FUTURE
+            - INDEX
+            - ETF
+            - CW
+        industryCode:
+          type:
+            - string
+            - 'null'
+        industryName:
+          type:
+            - string
+            - 'null'
+        lotSize:
+          type: integer
+          minimum: 1
+        listedDate:
+          type:
+            - string
+            - 'null'
+          format: date
+        expiryDate:
+          type:
+            - string
+            - 'null'
+          format: date
+        isActive:
+          type: boolean
+    SymbolList:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Symbol'
+        nextCursor:
+          type:
+            - string
+            - 'null'
+    Problem:
+      type: object
+      description: Lỗi RFC 9457 với mã lỗi ổn định của sản phẩm.
+      required:
+        - type
+        - title
+        - status
+        - code
+        - correlationId
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - UNAUTHENTICATED
+            - TOKEN_REUSED
+            - TERMS_NOT_ACCEPTED
+            - DERIVATIVE_RISK_NOT_ACKED
+            - INVITE_INVALID
+            - FORBIDDEN
+            - NOT_FOUND
+            - LIMIT_EXCEEDED
+            - RISK_LOT_SIZE
+            - RISK_PRICE_BAND
+            - RISK_TICK_SIZE
+            - RISK_INSUFFICIENT_CASH
+            - RISK_INSUFFICIENT_SHARES
+            - RISK_SESSION
+            - RISK_ORDER_LIMIT
+            - RISK_DAILY_LIMIT
+            - RISK_HALTED
+            - DATA_STALE
+            - AI_QUOTA_EXCEEDED
+            - RATE_LIMITED
+            - ACCOUNT_LOCKED
+            - INTERNAL_ERROR
+        correlationId:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - field
+              - message
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+    SessionState:
+      type: string
+      description: Trạng thái phiên giao dịch (SRS FR-024).
+      enum:
+        - PRE_OPEN
+        - ATO
+        - CONTINUOUS
+        - LUNCH_BREAK
+        - ATC
+        - POST_CLOSE
+        - CLOSED
+    Provenance:
+      type: object
+      required:
+        - source
+        - asOf
+        - kind
+        - stale
+      properties:
+        source:
+          type: string
+        asOf:
+          type: string
+          format: date-time
+        kind:
+          type: string
+          enum:
+            - DELAYED
+            - CALCULATED
+            - CLOSE
+        stale:
+          type: boolean
+    Quote:
+      type: object
+      required:
+        - symbol
+        - price
+        - ref
+        - ceiling
+        - floor
+        - volume
+        - value
+        - asOf
+        - provider
+        - session
+        - provenance
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        price:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+          description: Giá khớp gần nhất; null khi chưa có lệnh khớp trong phiên (không dùng 0).
+        ref:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        ceiling:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        floor:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        open:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        high:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        low:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        volume:
+          type:
+            - integer
+            - 'null'
+          format: int64
+          minimum: 0
+          description: Khối lượng khớp lũy kế; null khi nguồn không cung cấp (ví dụ vnstock cấp Guest).
+        value:
+          type:
+            - integer
+            - 'null'
+          format: int64
+          minimum: 0
+          description: Giá trị giao dịch tính bằng đồng; null khi nguồn không cung cấp.
+        change:
+          type:
+            - number
+            - 'null'
+          multipleOf: 0.01
+        pct:
+          type:
+            - number
+            - 'null'
+        asOf:
+          type: string
+          format: date-time
+        provider:
+          type: string
+        session:
+          $ref: '#/components/schemas/SessionState'
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    OrderBookLevel:
+      type: object
+      required:
+        - price
+        - volume
+      properties:
+        price:
+          type: number
+          multipleOf: 0.01
+        volume:
+          type: integer
+          format: int64
+          minimum: 0
+    OrderBook:
+      type: object
+      required:
+        - symbol
+        - bids
+        - asks
+        - provenance
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        bids:
+          type: array
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/OrderBookLevel'
+        asks:
+          type: array
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/OrderBookLevel'
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    Bar:
+      type: object
+      required:
+        - symbol
+        - tradeDate
+        - open
+        - high
+        - low
+        - close
+        - volume
+        - value
+        - provenance
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        tradeDate:
+          type: string
+          format: date
+        open:
+          type: number
+          multipleOf: 0.01
+        high:
+          type: number
+          multipleOf: 0.01
+        low:
+          type: number
+          multipleOf: 0.01
+        close:
+          type: number
+          multipleOf: 0.01
+        volume:
+          type: integer
+          format: int64
+          minimum: 0
+        value:
+          type:
+            - integer
+            - 'null'
+          format: int64
+          minimum: 0
+          description: Giá trị giao dịch tính bằng đồng; null khi nguồn không cung cấp (market.daily_bars.value).
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    BarList:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bar'
+    IndicatorSet:
+      type: object
+      required:
+        - symbol
+        - asOf
+        - indicators
+        - provenance
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        asOf:
+          type: string
+          format: date-time
+        indicators:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - name
+              - rule
+              - status
+            properties:
+              code:
+                type: string
+              name:
+                type: string
+              value:
+                type:
+                  - number
+                  - 'null'
+              display:
+                type:
+                  - string
+                  - 'null'
+              rule:
+                type: string
+              status:
+                type: string
+                enum:
+                  - OK
+                  - INSUFFICIENT_DATA
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    Fundamentals:
+      type: object
+      required:
+        - symbol
+        - asOf
+        - provenance
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        asOf:
+          type: string
+          format: date-time
+        reportPeriod:
+          type:
+            - string
+            - 'null'
+          format: date
+        pe:
+          type:
+            - number
+            - 'null'
+        pb:
+          type:
+            - number
+            - 'null'
+        roe:
+          type:
+            - number
+            - 'null'
+        roa:
+          type:
+            - number
+            - 'null'
+        eps:
+          type:
+            - number
+            - 'null'
+        marketCapVnd:
+          type:
+            - integer
+            - 'null'
+          format: int64
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    Mover:
+      type: object
+      required:
+        - symbol
+        - price
+        - pct
+        - volume
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+        price:
+          type: number
+          multipleOf: 0.01
+        pct:
+          type: number
+        volume:
+          type:
+            - integer
+            - 'null'
+          format: int64
+          minimum: 0
+          description: Khối lượng khớp trong phiên; null khi nguồn không cung cấp (ví dụ vnstock cấp Guest).
+    MarketOverview:
+      type: object
+      required:
+        - provenance
+        - unavailable
+        - indices
+        - breadth
+        - topMovers
+        - cards
+      properties:
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+        unavailable:
+          type: array
+          items:
+            type: string
+        indices:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - name
+              - value
+              - change
+              - pct
+            properties:
+              code:
+                type: string
+              name:
+                type: string
+              value:
+                type: number
+                multipleOf: 0.01
+              change:
+                type: number
+              pct:
+                type: number
+        breadth:
+          type: object
+          required:
+            - advances
+            - declines
+            - unchanged
+            - total
+          properties:
+            advances:
+              type: integer
+              minimum: 0
+            declines:
+              type: integer
+              minimum: 0
+            unchanged:
+              type: integer
+              minimum: 0
+            total:
+              type: integer
+              minimum: 0
+            pctAboveMa20:
+              type:
+                - number
+                - 'null'
+            pctAboveMa50:
+              type:
+                - number
+                - 'null'
+            pctAboveMa200:
+              type:
+                - number
+                - 'null'
+        topMovers:
+          type: object
+          required:
+            - gainers
+            - losers
+            - volumeSpike
+          properties:
+            gainers:
+              type: array
+              maxItems: 10
+              items:
+                $ref: '#/components/schemas/Mover'
+            losers:
+              type: array
+              maxItems: 10
+              items:
+                $ref: '#/components/schemas/Mover'
+            volumeSpike:
+              type: array
+              maxItems: 10
+              items:
+                $ref: '#/components/schemas/Mover'
+        cards:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - title
+              - text
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              text:
+                type: string
+    Treemap:
+      type: object
+      required:
+        - weight
+        - dir
+        - provenance
+        - cells
+        - unavailable
+      properties:
+        weight:
+          type: string
+          enum:
+            - VALUE
+            - COUNT
+            - ADVANCERS
+        dir:
+          type: string
+          enum:
+            - ALL
+            - UP
+            - DOWN
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+        unavailable:
+          type: array
+          items:
+            type: string
+        cells:
+          type: array
+          items:
+            type: object
+            required:
+              - symbol
+              - name
+              - exchange
+              - size
+              - pct
+            properties:
+              symbol:
+                type: string
+                pattern: ^[A-Z0-9]{2,20}$
+              name:
+                type: string
+              exchange:
+                type: string
+                enum:
+                  - HOSE
+                  - HNX
+                  - UPCOM
+                  - DERIV
+              size:
+                type: number
+              pct:
+                type: number
+    MarketState:
+      type: object
+      required:
+        - session
+        - tradingDate
+        - holiday
+        - updatedAt
+        - markets
+        - provenance
+      properties:
+        session:
+          $ref: '#/components/schemas/SessionState'
+        tradingDate:
+          type: string
+          format: date
+        holiday:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
+        markets:
+          type: array
+          items:
+            type: object
+            required:
+              - exchange
+              - session
+            properties:
+              exchange:
+                type: string
+                enum:
+                  - HOSE
+                  - HNX
+                  - UPCOM
+                  - DERIV
+              session:
+                $ref: '#/components/schemas/SessionState'
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    AiSummaryRequest:
+      type: object
+      required:
+        - symbol
+      properties:
+        symbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+    Fact:
+      type: object
+      required:
+        - id
+        - label
+        - value
+        - unit
+        - source
+        - asOf
+      properties:
+        id:
+          type: string
+          pattern: ^F[0-9]+$
+        label:
+          type: string
+        value:
+          type: string
+        unit:
+          type: string
+        display:
+          type:
+            - string
+            - 'null'
+        source:
+          type: string
+        asOf:
+          type: string
+          format: date-time
+    AiLabels:
+      type: object
+      required:
+        - aiGenerated
+        - notAdvice
+      properties:
+        aiGenerated:
+          type: boolean
+          const: true
+        notAdvice:
+          type: boolean
+          const: true
+    AiSummary:
+      type: object
+      required:
+        - interactionId
+        - status
+        - text
+        - citations
+        - facts
+        - labels
+        - provenance
+      properties:
+        interactionId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - PUBLISHED
+            - FALLBACK
+            - REFUSED
+        text:
+          type:
+            - string
+            - 'null'
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fact'
+        facts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fact'
+        labels:
+          $ref: '#/components/schemas/AiLabels'
+        provenance:
+          $ref: '#/components/schemas/Provenance'
+    AiChatRequest:
+      type: object
+      required:
+        - userRef
+        - question
+      properties:
+        userRef:
+          type: string
+          description: Mã người dùng ẩn danh HMAC; không chứa email hay dữ liệu cá nhân.
+          minLength: 16
+        question:
+          type: string
+          minLength: 1
+          maxLength: 500
+        contextSymbol:
+          type: string
+          pattern: ^[A-Z0-9]{2,20}$
+    AiChatResult:
+      allOf:
+        - $ref: '#/components/schemas/AiSummary'
+        - type: object
+          required:
+            - refunded
+          properties:
+            refunded:
+              type: boolean
+              description: true khi lỗi hệ thống và quota đã được hoàn.
+    AiFeedbackRequest:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+    AiReportRequest:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1000
+    AiReview:
+      type: object
+      required:
+        - id
+        - interactionId
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        interactionId:
+          type: string
+          format: uuid
+        symbol:
+          type:
+            - string
+            - 'null'
+        status:
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+        text:
+          type:
+            - string
+            - 'null'
+        verdictNote:
+          type:
+            - string
+            - 'null'
+        reviewedAt:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    AiReviewList:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiReview'
+        nextCursor:
+          type:
+            - string
+            - 'null'
+    AiReviewVerdictRequest:
+      type: object
+      required:
+        - verdict
+      properties:
+        verdict:
+          type: string
+          enum:
+            - APPROVED
+            - REJECTED
+        note:
+          type: string
+          maxLength: 1000
+    IngestionStatus:
+      type: object
+      required:
+        - asOf
+        - providers
+      properties:
+        asOf:
+          type: string
+          format: date-time
+        providers:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - status
+              - consecutiveFailures
+              - quarantinedRecords
+            properties:
+              name:
+                type: string
+              status:
+                type: string
+                enum:
+                  - OK
+                  - DEGRADED
+                  - DOWN
+              lastSuccessAt:
+                type:
+                  - string
+                  - 'null'
+                format: date-time
+              consecutiveFailures:
+                type: integer
+                minimum: 0
+              quarantinedRecords:
+                type: integer
+                minimum: 0
+    Health:
+      type: object
+      required:
+        - status
+        - components
+      properties:
+        status:
+          type: string
+          enum:
+            - UP
+            - DOWN
+        components:
+          type: object
+          required:
+            - db
+            - redis
+          properties:
+            db:
+              type: string
+              enum:
+                - UP
+                - DOWN
+            redis:
+              type: string
+              enum:
+                - UP
+                - DOWN
+  responses:
+    BadRequest:
+      description: Yêu cầu không hợp lệ.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Thiếu hoặc sai X-Service-Token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    TooManyRequests:
+      description: Vượt giới hạn tần suất hoặc hạn mức.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Không tìm thấy tài nguyên.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ServiceUnavailable:
+      description: Dịch vụ hoặc dữ liệu không khả dụng (fail-closed).
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'

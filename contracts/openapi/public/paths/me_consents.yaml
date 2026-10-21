@@ -1,0 +1,16 @@
+get:
+  operationId: listMyConsents
+  summary: Danh sách đồng ý
+  tags: [consent]
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Trạng thái đồng ý hiện tại của từng mục đích.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ConsentList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

@@ -1,0 +1,17 @@
+get:
+  operationId: getSymbol
+  summary: Thông tin mã
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+  responses:
+    '200':
+      description: Thông tin mã.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Symbol.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

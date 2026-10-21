@@ -1,0 +1,9 @@
+type: object
+required: [aiGenerated, notAdvice]
+properties:
+  aiGenerated:
+    type: boolean
+    const: true
+  notAdvice:
+    type: boolean
+    const: true

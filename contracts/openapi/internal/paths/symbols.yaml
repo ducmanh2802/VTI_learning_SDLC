@@ -1,0 +1,33 @@
+get:
+  operationId: internalListSymbols
+  summary: Danh mục mã
+  tags: [market]
+  parameters:
+    - name: q
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 40
+    - name: exchange
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [HOSE, HNX, UPCOM, DERIV]
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+    - $ref: '../parameters/CorrelationId.yaml'
+  responses:
+    '200':
+      description: Danh sách mã.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/SymbolList.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

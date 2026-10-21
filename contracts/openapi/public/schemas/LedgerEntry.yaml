@@ -1,0 +1,27 @@
+type: object
+required: [id, entryType, assetType, amount, availableOn, createdAt]
+properties:
+  id:
+    type: integer
+    format: int64
+  entryType:
+    type: string
+    enum: [INITIAL_DEPOSIT, BUY_COST, SELL_PROCEEDS, FEE, TAX, BUY_SHARES, SELL_SHARES]
+  assetType:
+    type: string
+    enum: [CASH, SECURITY]
+  symbol:
+    type: [string, 'null']
+  amount:
+    type: integer
+    format: int64
+    description: Có dấu; CASH tính bằng đồng, SECURITY tính bằng cổ phiếu.
+  availableOn:
+    type: string
+    format: date
+  fillId:
+    type: [string, 'null']
+    format: uuid
+  createdAt:
+    type: string
+    format: date-time

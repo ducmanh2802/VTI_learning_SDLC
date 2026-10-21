@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vnstockai.example/contracts/events/s-quotes.schema.json",
+  "title": "s:quotes stream entry",
+  "description": "Một bản ghi trong Redis Stream s:quotes do Analytics ghi và Core tiêu thụ.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cycle_id", "ts", "session", "symbols"],
+  "properties": {
+    "cycle_id": {
+      "type": "string",
+      "description": "Định danh chu kỳ thu thập, duy nhất cho mỗi lần phát.",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "ts": {
+      "type": "integer",
+      "description": "Thời điểm phát, epoch milliseconds.",
+      "minimum": 0
+    },
+    "session": {
+      "type": "string",
+      "description": "Trạng thái phiên tại thời điểm phát (SRS FR-024).",
+      "enum": [
+        "PRE_OPEN",
+        "ATO",
+        "CONTINUOUS",
+        "LUNCH_BREAK",
+        "ATC",
+        "POST_CLOSE",
+        "CLOSED"
+      ]
+    },
+    "symbols": {
+      "type": "string",
+      "description": "Danh sách mã đã cập nhật, nối bằng dấu phẩy, không khoảng trắng.",
+      "pattern": "^[A-Z0-9]{2,20}(,[A-Z0-9]{2,20})*$"
+    }
+  }
+}

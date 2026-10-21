@@ -1,0 +1,30 @@
+type: object
+required: [symbol, side, orderType, quantity]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  side:
+    type: string
+    enum: [BUY, SELL]
+  orderType:
+    type: string
+    enum: [LO, MP]
+  quantity:
+    type: integer
+    minimum: 100
+    multipleOf: 100
+  limitPrice:
+    type: number
+    multipleOf: 0.01
+    description: Bắt buộc khi orderType = LO; bỏ trống khi MP.
+if:
+  properties:
+    orderType:
+      const: LO
+  required: [orderType]
+then:
+  required: [limitPrice]
+else:
+  not:
+    required: [limitPrice]

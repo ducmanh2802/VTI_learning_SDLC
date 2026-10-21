@@ -1,0 +1,66 @@
+get:
+  operationId: listPaperOrders
+  summary: Danh sách lệnh giả lập
+  tags: [paper]
+  parameters:
+    - name: status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [NEW, OPEN, FILLED, CANCELLED, EXPIRED, REJECTED]
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Lệnh giả lập của người dùng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperOrderList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+post:
+  operationId: placePaperOrder
+  summary: Đặt lệnh giả lập
+  description: RiskGuard chạy theo thứ tự ALG-10 và trả mã RISK_* của vi phạm đầu tiên.
+  tags: [paper]
+  parameters:
+    - $ref: '../parameters/IdempotencyKey.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/PaperOrderRequest.yaml'
+  responses:
+    '201':
+      description: Lệnh đã được nhận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaperOrder.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'
+    '422':
+      description: Vi phạm RiskGuard; `code` là RISK_*.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../schemas/Problem.yaml'
+          examples:
+            riskLotSize:
+              summary: Khối lượng không phải bội số của lô
+              value:
+                type: https://api.example.vn/errors/risk-lot-size
+                title: Khối lượng không hợp lệ
+                status: 422
+                detail: Khối lượng phải là bội số của 100 cổ phiếu.
+                code: RISK_LOT_SIZE
+                correlationId: c0a8012e-8f3a-4a1b-9c2d-5e6f7a8b9c0d
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

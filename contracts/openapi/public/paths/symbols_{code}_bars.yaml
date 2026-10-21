@@ -1,0 +1,41 @@
+get:
+  operationId: getBars
+  summary: Nến giá
+  description: |
+    Trả toàn bộ nến trong khoảng [from, to], sắp xếp tăng dần theo ngày, không phân trang
+    (biểu đồ cần cả chuỗi). Khoảng tối đa 5 năm; vượt quá trả 400 VALIDATION_ERROR.
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+    - name: interval
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [D, W, M]
+        default: D
+    - name: from
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+  responses:
+    '200':
+      description: Danh sách nến trong khoảng yêu cầu.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/BarList.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

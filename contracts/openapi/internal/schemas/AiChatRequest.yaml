@@ -1,0 +1,14 @@
+type: object
+required: [userRef, question]
+properties:
+  userRef:
+    type: string
+    description: Mã người dùng ẩn danh HMAC; không chứa email hay dữ liệu cá nhân.
+    minLength: 16
+  question:
+    type: string
+    minLength: 1
+    maxLength: 500
+  contextSymbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'

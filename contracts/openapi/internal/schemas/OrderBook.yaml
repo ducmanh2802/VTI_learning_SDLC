@@ -1,0 +1,18 @@
+type: object
+required: [symbol, bids, asks, provenance]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  bids:
+    type: array
+    maxItems: 3
+    items:
+      $ref: './OrderBookLevel.yaml'
+  asks:
+    type: array
+    maxItems: 3
+    items:
+      $ref: './OrderBookLevel.yaml'
+  provenance:
+    $ref: './Provenance.yaml'

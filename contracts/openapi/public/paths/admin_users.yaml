@@ -1,0 +1,33 @@
+get:
+  operationId: adminListUsers
+  summary: Danh sách người dùng
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - name: q
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 254
+    - name: status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [PENDING_VERIFICATION, ACTIVE, SUSPENDED, DELETION_REQUESTED, DELETED]
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Danh sách người dùng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AdminUserList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

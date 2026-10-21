@@ -1,0 +1,38 @@
+type: object
+required: [symbol, bids, asks, provenance]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  bids:
+    type: array
+    maxItems: 3
+    description: Ba bước giá mua tốt nhất.
+    items:
+      type: object
+      required: [price, volume]
+      properties:
+        price:
+          type: number
+          multipleOf: 0.01
+        volume:
+          type: integer
+          format: int64
+          minimum: 0
+  asks:
+    type: array
+    maxItems: 3
+    description: Ba bước giá bán tốt nhất.
+    items:
+      type: object
+      required: [price, volume]
+      properties:
+        price:
+          type: number
+          multipleOf: 0.01
+        volume:
+          type: integer
+          format: int64
+          minimum: 0
+  provenance:
+    $ref: './Provenance.yaml'

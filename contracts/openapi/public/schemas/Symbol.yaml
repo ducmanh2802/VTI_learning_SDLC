@@ -1,0 +1,29 @@
+type: object
+required: [code, name, exchange, kind, lotSize, isActive]
+properties:
+  code:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  name:
+    type: string
+  exchange:
+    type: string
+    enum: [HOSE, HNX, UPCOM, DERIV]
+  kind:
+    type: string
+    enum: [STOCK, FUTURE, INDEX, ETF, CW]
+  industryCode:
+    type: [string, 'null']
+  industryName:
+    type: [string, 'null']
+  lotSize:
+    type: integer
+    minimum: 1
+  listedDate:
+    type: [string, 'null']
+    format: date
+  expiryDate:
+    type: [string, 'null']
+    format: date
+  isActive:
+    type: boolean

@@ -1,0 +1,14 @@
+type: object
+properties:
+  maxOrderValue:
+    type: [integer, 'null']
+    format: int64
+    minimum: 1
+  maxDailyValue:
+    type: [integer, 'null']
+    format: int64
+    minimum: 1
+  maxDrawdownPct:
+    type: [number, 'null']
+    exclusiveMinimum: 0
+    maximum: 100

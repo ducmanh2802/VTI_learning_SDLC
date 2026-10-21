@@ -1,0 +1,26 @@
+type: object
+required: [session, tradingDate, holiday, updatedAt, markets, provenance]
+properties:
+  session:
+    $ref: './SessionState.yaml'
+  tradingDate:
+    type: string
+    format: date
+  holiday:
+    type: boolean
+  updatedAt:
+    type: string
+    format: date-time
+  markets:
+    type: array
+    items:
+      type: object
+      required: [exchange, session]
+      properties:
+        exchange:
+          type: string
+          enum: [HOSE, HNX, UPCOM, DERIV]
+        session:
+          $ref: './SessionState.yaml'
+  provenance:
+    $ref: './Provenance.yaml'

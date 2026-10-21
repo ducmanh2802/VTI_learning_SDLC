@@ -1,0 +1,13 @@
+type: object
+required: [source, asOf, kind, stale]
+properties:
+  source:
+    type: string
+  asOf:
+    type: string
+    format: date-time
+  kind:
+    type: string
+    enum: [DELAYED, CALCULATED, CLOSE]
+  stale:
+    type: boolean

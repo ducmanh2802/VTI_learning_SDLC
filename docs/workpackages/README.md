@@ -14,8 +14,37 @@ Quy tắc chung cho agent nằm ở [AGENTS.md](../../AGENTS.md). Danh sách đ�
 | WP | Tên | Brief | Trạng thái |
 |---|---|---|---|
 | WP-00 | Khung repo, hạ tầng dev, CI cơ bản | [WP-00.md](WP-00.md) | **PASS**, đã merge vào `integration/r1` ([audit](reports/WP-00-audit.md)) |
-| WP-01 | Migration baseline, migrator, role dịch vụ | [WP-01.md](WP-01.md) | Đang giao |
-| WP-02 | Hợp đồng OpenAPI và sự kiện | [WP-02.md](WP-02.md) | Đang giao |
+| WP-01 | Migration baseline, migrator, role dịch vụ | [WP-01.md](WP-01.md) | **PASS**, đã merge ([audit](reports/WP-01-audit.md)); CI xanh trên `integration/r1` |
+| WP-02 | Hợp đồng OpenAPI và sự kiện | [WP-02.md](WP-02.md) | **PASS** sau 3 sửa của audit, đã merge ([audit](reports/WP-02-audit.md)) |
+| WP-03 | Khung Core (Spring Boot 4) | [WP-03.md](WP-03.md) | Đang giao |
+| WP-04 | Identity | [WP-04.md](WP-04.md) | Chờ WP-03 |
+| WP-05 | Consent | [WP-05.md](WP-05.md) | Chờ WP-04 |
+| WP-06 | Admin | [WP-06.md](WP-06.md) | Chờ WP-04 |
+| WP-07 | Khung Analytics | [WP-07.md](WP-07.md) | Đang giao, song song với WP-02 |
+| WP-08 | Nguồn dữ liệu vnstock | [WP-08.md](WP-08.md) | Chờ WP-07 |
+| WP-09 | Failover nguồn | [WP-09.md](WP-09.md) | Chờ WP-08 |
+| WP-10 | Thu thập dữ liệu | [WP-10.md](WP-10.md) | Chờ WP-09 |
+| WP-11 | Chỉ báo kỹ thuật | [WP-11.md](WP-11.md) | Chờ WP-07 |
+| WP-12 | Tổng quan thị trường | [WP-12.md](WP-12.md) | Chờ WP-10, WP-11 |
+| WP-14 | Cổng LLM | [WP-14.md](WP-14.md) | Chờ WP-07 |
+| WP-15 | Guardrails AI | [WP-15.md](WP-15.md) | Chờ WP-07 |
+| WP-12b | Trạng thái thị trường, hỗ trợ/kháng cự | — | Hoãn: chờ ngưỡng từ dự án cũ (OQ-054); tính năng có cờ, mặc định tắt |
+| WP-13a | API thị trường nội bộ (Analytics) | [WP-13a.md](WP-13a.md) | Chờ WP-10 đến WP-12 |
+| WP-13b | Core: quotes + marketgw | [WP-13b.md](WP-13b.md) | Chờ WP-03 |
+| WP-16a | Pipeline AI (Analytics) | [WP-16a.md](WP-16a.md) | Chờ WP-11, WP-13a, WP-14, WP-15 |
+| WP-16b | AI ở Core (quota, userRef) | [WP-16b.md](WP-16b.md) | Chờ WP-13b, WP-06 |
+| WP-17 | Danh sách theo dõi | [WP-17.md](WP-17.md) | Chờ WP-13b, WP-05 |
+| WP-18 | Cảnh báo và thông báo | [WP-18.md](WP-18.md) | Chờ WP-13b, WP-05 |
+| WP-19 | Giả lập và RiskGuard | [WP-19.md](WP-19.md) | Chờ WP-13b, WP-05 |
+| WP-20a | Web: khung, xác thực | [WP-20a.md](WP-20a.md) | Chờ WP-04, WP-05 |
+| WP-20b | Web: thị trường, mã | [WP-20b.md](WP-20b.md) | Chờ WP-20a |
+| WP-20c | Web: AI, theo dõi, cảnh báo | [WP-20c.md](WP-20c.md) | Chờ WP-20b |
+| WP-20d | Web: giả lập | [WP-20d.md](WP-20d.md) | Chờ WP-20b |
+| WP-20e | Web: tài khoản, quản trị | [WP-20e.md](WP-20e.md) | Chờ WP-20a |
+| WP-21 | Mobile (Expo) | [WP-21.md](WP-21.md) | Chờ WP-20a đến WP-20d |
+| WP-22 | Hạ tầng production | [WP-22.md](WP-22.md) | Chờ WP-03, WP-07, WP-20a |
+| WP-23 | Telemetry, hỗ trợ, chỉ số | [WP-23.md](WP-23.md) | Chờ WP-05, WP-06, WP-16b |
+| WP-24 | Kiểm thử phát hành R1 | [WP-24.md](WP-24.md) | Sau cùng |
 
 Nhánh tích hợp: mọi WP được tạo từ `integration/r1`. WP nào đạt audit thì được merge vào `integration/r1`. Founder merge `integration/r1` vào `main` khi muốn.
 

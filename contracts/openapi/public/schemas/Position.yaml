@@ -1,0 +1,25 @@
+type: object
+required: [symbol, quantityTotal, quantityAvailable, avgCost, realizedPnl, updatedAt]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  quantityTotal:
+    type: integer
+    format: int64
+    minimum: 0
+  quantityAvailable:
+    type: integer
+    format: int64
+    minimum: 0
+    description: Số cổ phiếu đã về theo T+2, không tính phần giữ chỗ của lệnh bán.
+  avgCost:
+    type: number
+    multipleOf: 0.0001
+    minimum: 0
+  realizedPnl:
+    type: integer
+    format: int64
+  updatedAt:
+    type: string
+    format: date-time

@@ -1,0 +1,18 @@
+type: object
+required: [id, severity, message, startsAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  severity:
+    type: string
+    enum: [INFO, DEGRADED, OUTAGE]
+  message:
+    type: string
+    maxLength: 500
+  startsAt:
+    type: string
+    format: date-time
+  endsAt:
+    type: [string, 'null']
+    format: date-time

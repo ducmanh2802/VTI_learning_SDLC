@@ -1,0 +1,65 @@
+openapi: 3.1.0
+info:
+  title: VN Stock AI Pro - Internal API
+  version: 0.1.0
+  description: |
+    API nội bộ của Analytics service, chỉ lắng nghe trên mạng Docker `internal`.
+    Mọi request phải có header `X-Service-Token` và nên có `X-Correlation-Id`.
+servers:
+  - url: /internal/v1
+security:
+  - serviceToken: []
+tags:
+  - name: market
+    description: Danh mục mã, giá, nến, chỉ báo và tổng quan thị trường.
+  - name: ai
+    description: Tóm tắt, hỏi đáp, phản hồi và rà soát AI.
+  - name: ops
+    description: Vận hành và sức khỏe dịch vụ.
+  - name: support
+    description: Sức khỏe dịch vụ.
+paths:
+  /symbols:
+    $ref: './internal/paths/symbols.yaml'
+  /symbols/{code}:
+    $ref: './internal/paths/symbols_{code}.yaml'
+  /symbols/{code}/quote:
+    $ref: './internal/paths/symbols_{code}_quote.yaml'
+  /symbols/{code}/orderbook:
+    $ref: './internal/paths/symbols_{code}_orderbook.yaml'
+  /symbols/{code}/bars:
+    $ref: './internal/paths/symbols_{code}_bars.yaml'
+  /symbols/{code}/indicators:
+    $ref: './internal/paths/symbols_{code}_indicators.yaml'
+  /symbols/{code}/fundamentals:
+    $ref: './internal/paths/symbols_{code}_fundamentals.yaml'
+  /market/overview:
+    $ref: './internal/paths/market_overview.yaml'
+  /market/treemap:
+    $ref: './internal/paths/market_treemap.yaml'
+  /market/state:
+    $ref: './internal/paths/market_state.yaml'
+  /ai/summary:
+    $ref: './internal/paths/ai_summary.yaml'
+  /ai/chat:
+    $ref: './internal/paths/ai_chat.yaml'
+  /ai/interactions/{id}/feedback:
+    $ref: './internal/paths/ai_interactions_{id}_feedback.yaml'
+  /ai/interactions/{id}/report:
+    $ref: './internal/paths/ai_interactions_{id}_report.yaml'
+  /ai/reviews:
+    $ref: './internal/paths/ai_reviews.yaml'
+  /ai/reviews/{id}/verdict:
+    $ref: './internal/paths/ai_reviews_{id}_verdict.yaml'
+  /ops/ingestion:
+    $ref: './internal/paths/ops_ingestion.yaml'
+  /health/live:
+    $ref: './internal/paths/health_live.yaml'
+  /health/ready:
+    $ref: './internal/paths/health_ready.yaml'
+components:
+  securitySchemes:
+    serviceToken:
+      type: apiKey
+      in: header
+      name: X-Service-Token

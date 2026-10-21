@@ -1,0 +1,16 @@
+type: object
+properties:
+  status:
+    type: string
+    enum: [ACTIVE, PAUSED]
+  threshold:
+    type: number
+  channels:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      enum: [IN_APP, EMAIL, PUSH]
+  expiresAt:
+    type: [string, 'null']
+    format: date-time

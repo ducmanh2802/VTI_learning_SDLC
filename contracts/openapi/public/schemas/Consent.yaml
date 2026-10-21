@@ -1,0 +1,15 @@
+type: object
+required: [purpose, description, required, granted]
+properties:
+  purpose:
+    type: string
+    enum: [P1, P2, P3, P4]
+  description:
+    type: string
+  required:
+    type: boolean
+  granted:
+    type: boolean
+  recordedAt:
+    type: string
+    format: date-time

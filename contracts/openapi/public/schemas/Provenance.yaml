@@ -1,0 +1,16 @@
+type: object
+required: [source, asOf, kind, stale]
+properties:
+  source:
+    type: string
+    description: Tên nguồn dữ liệu hoặc "Tính toán".
+  asOf:
+    type: string
+    format: date-time
+    description: Thời điểm dữ liệu được tạo, ISO 8601 kèm +07:00.
+  kind:
+    type: string
+    enum: [DELAYED, CALCULATED, CLOSE]
+  stale:
+    type: boolean
+    description: true khi dữ liệu cũ hơn ngưỡng fail-closed; UI phải hiển thị nhãn.

@@ -1,0 +1,25 @@
+post:
+  operationId: reportAiContent
+  summary: Báo cáo nội dung AI
+  tags: [ai]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/AiReportRequest.yaml'
+  responses:
+    '202':
+      description: Báo cáo đã được tiếp nhận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MessageResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

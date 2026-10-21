@@ -1,0 +1,47 @@
+name: Contracts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "integration/**"
+      - "wp-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contracts-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Lint, bundle and validate contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Lint OpenAPI
+        run: npx --yes @redocly/cli@1 lint --config contracts/openapi/redocly.yaml
+
+      - name: Bundle both APIs into a temporary directory
+        run: |
+          mkdir -p "$RUNNER_TEMP/contracts-dist"
+          npx --yes @redocly/cli@1 bundle public --config contracts/openapi/redocly.yaml -o "$RUNNER_TEMP/contracts-dist/public.yaml"
+          npx --yes @redocly/cli@1 bundle internal --config contracts/openapi/redocly.yaml -o "$RUNNER_TEMP/contracts-dist/internal.yaml"
+
+      - name: Check committed bundles are up to date
+        run: |
+          git diff --no-index --exit-code "$RUNNER_TEMP/contracts-dist/public.yaml" contracts/openapi/dist/public.yaml
+          git diff --no-index --exit-code "$RUNNER_TEMP/contracts-dist/internal.yaml" contracts/openapi/dist/internal.yaml
+
+      - name: Validate events schema
+        run: npx --yes ajv-cli@5 validate --spec=draft2020 -s contracts/events/s-quotes.schema.json -d contracts/events/examples/s-quotes.example.json

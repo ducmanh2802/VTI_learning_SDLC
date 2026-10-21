@@ -1,0 +1,9 @@
+type: object
+required: [items]
+properties:
+  items:
+    type: array
+    items:
+      $ref: './LedgerEntry.yaml'
+  nextCursor:
+    type: [string, 'null']

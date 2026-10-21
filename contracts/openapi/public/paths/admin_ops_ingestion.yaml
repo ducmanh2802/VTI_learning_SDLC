@@ -1,0 +1,18 @@
+get:
+  operationId: adminGetIngestionStatus
+  summary: Trạng thái thu thập dữ liệu
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  responses:
+    '200':
+      description: Trạng thái các nguồn dữ liệu.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/IngestionStatus.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

@@ -1,0 +1,34 @@
+post:
+  operationId: refreshToken
+  summary: Xoay vòng refresh token
+  description: |
+    Chấp nhận cookie `refresh_token` hoặc body `{refreshToken}`. Dùng lại một refresh
+    token đã xoay vòng sẽ thu hồi toàn bộ family và trả TOKEN_REUSED.
+  tags: [identity]
+  security:
+    - refreshCookie: []
+    - {}
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/RefreshRequest.yaml'
+  responses:
+    '200':
+      description: Token mới.
+      headers:
+        Set-Cookie:
+          description: Cookie refresh token mới cho client WEB.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/TokenResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

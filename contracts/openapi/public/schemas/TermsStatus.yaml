@@ -1,0 +1,35 @@
+type: object
+required: [currentVersions, acceptedVersions, pendingVersions]
+properties:
+  currentVersions:
+    type: array
+    items:
+      type: object
+      required: [version, kind, title, publishedAt]
+      properties:
+        version:
+          type: string
+        kind:
+          type: string
+          enum: [TERMS, PRIVACY, DERIVATIVE_RISK]
+        title:
+          type: string
+        publishedAt:
+          type: string
+          format: date-time
+  acceptedVersions:
+    type: array
+    items:
+      type: object
+      required: [version, acceptedAt]
+      properties:
+        version:
+          type: string
+        acceptedAt:
+          type: string
+          format: date-time
+  pendingVersions:
+    type: array
+    description: Phiên bản hiện hành chưa được người dùng chấp thuận.
+    items:
+      type: string

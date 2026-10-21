@@ -1,0 +1,26 @@
+post:
+  operationId: adminPublishTerms
+  summary: Phát hành phiên bản điều khoản
+  description: Yêu cầu vai trò ADMIN. Phiên bản đã phát hành không sửa được.
+  tags: [admin]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/PublishTermsRequest.yaml'
+  responses:
+    '201':
+      description: Phiên bản đã phát hành.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/TermsVersion.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

@@ -1,0 +1,20 @@
+get:
+  operationId: internalGetOrderBook
+  summary: Sổ lệnh ba bước giá
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+    - $ref: '../parameters/CorrelationId.yaml'
+  responses:
+    '200':
+      description: Sổ lệnh hiện tại.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/OrderBook.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

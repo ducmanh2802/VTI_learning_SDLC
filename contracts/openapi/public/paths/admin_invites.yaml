@@ -1,0 +1,45 @@
+get:
+  operationId: adminListInvites
+  summary: Danh sách mã mời
+  description: Yêu cầu vai trò ADMIN. Không trả mã gốc.
+  tags: [admin]
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Danh sách mã mời.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/InviteList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'
+post:
+  operationId: adminCreateInvite
+  summary: Tạo mã mời
+  description: Yêu cầu vai trò ADMIN. Mã gốc chỉ trả về trong response này.
+  tags: [admin]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/CreateInviteRequest.yaml'
+  responses:
+    '201':
+      description: Mã mời đã được tạo.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/InviteCreated.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
