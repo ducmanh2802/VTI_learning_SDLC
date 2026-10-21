@@ -1,0 +1,20 @@
+type: object
+required: [quantity, price, fee, tax, filledAt]
+properties:
+  quantity:
+    type: integer
+    minimum: 1
+  price:
+    type: number
+    multipleOf: 0.01
+  fee:
+    type: integer
+    format: int64
+    minimum: 0
+  tax:
+    type: integer
+    format: int64
+    minimum: 0
+  filledAt:
+    type: string
+    format: date-time

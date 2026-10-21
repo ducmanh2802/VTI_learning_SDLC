@@ -1,0 +1,17 @@
+post:
+  operationId: markNotificationRead
+  summary: Đánh dấu thông báo đã đọc
+  tags: [notification]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '200':
+      description: Thông báo sau khi cập nhật.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Notification.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

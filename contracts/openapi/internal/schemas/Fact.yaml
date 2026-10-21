@@ -1,0 +1,19 @@
+type: object
+required: [id, label, value, unit, source, asOf]
+properties:
+  id:
+    type: string
+    pattern: '^F[0-9]+$'
+  label:
+    type: string
+  value:
+    type: string
+  unit:
+    type: string
+  display:
+    type: [string, 'null']
+  source:
+    type: string
+  asOf:
+    type: string
+    format: date-time

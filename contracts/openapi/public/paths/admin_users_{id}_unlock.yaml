@@ -1,0 +1,20 @@
+post:
+  operationId: adminUnlockUser
+  summary: Mở khóa tài khoản người dùng
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '200':
+      description: Người dùng sau khi mở khóa.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AdminUser.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

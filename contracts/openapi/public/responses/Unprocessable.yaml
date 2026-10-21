@@ -1,0 +1,5 @@
+description: Dữ liệu hợp lệ về cú pháp nhưng vi phạm quy tắc nghiệp vụ.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

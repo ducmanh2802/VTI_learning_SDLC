@@ -1,0 +1,6 @@
+name: cursor
+in: query
+required: false
+description: Con trỏ trang kế tiếp do server trả về.
+schema:
+  type: string

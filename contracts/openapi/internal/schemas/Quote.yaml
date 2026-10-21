@@ -1,0 +1,49 @@
+type: object
+required: [symbol, price, ref, ceiling, floor, volume, value, asOf, provider, session, provenance]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  price:
+    type: number
+    multipleOf: 0.01
+  ref:
+    type: [number, 'null']
+    multipleOf: 0.01
+  ceiling:
+    type: [number, 'null']
+    multipleOf: 0.01
+  floor:
+    type: [number, 'null']
+    multipleOf: 0.01
+  open:
+    type: [number, 'null']
+    multipleOf: 0.01
+  high:
+    type: [number, 'null']
+    multipleOf: 0.01
+  low:
+    type: [number, 'null']
+    multipleOf: 0.01
+  volume:
+    type: integer
+    format: int64
+    minimum: 0
+  value:
+    type: integer
+    format: int64
+    minimum: 0
+  change:
+    type: [number, 'null']
+    multipleOf: 0.01
+  pct:
+    type: [number, 'null']
+  asOf:
+    type: string
+    format: date-time
+  provider:
+    type: string
+  session:
+    $ref: './SessionState.yaml'
+  provenance:
+    $ref: './Provenance.yaml'

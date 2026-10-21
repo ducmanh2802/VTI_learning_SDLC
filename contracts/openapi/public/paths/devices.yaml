@@ -1,0 +1,23 @@
+post:
+  operationId: registerDevice
+  summary: Đăng ký thiết bị nhận push
+  tags: [notification]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/DeviceRegistration.yaml'
+  responses:
+    '201':
+      description: Thiết bị đã được đăng ký.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Device.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

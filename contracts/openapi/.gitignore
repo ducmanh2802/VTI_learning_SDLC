@@ -1,0 +1,4 @@
+# The root .gitignore ignores every `dist/` directory. These bundled contracts are
+# committed on purpose for code generation (WP-03, WP-07).
+!dist/
+!dist/*.yaml

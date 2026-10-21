@@ -1,0 +1,29 @@
+type: object
+required: [symbol, asOf, provenance]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  asOf:
+    type: string
+    format: date-time
+  reportPeriod:
+    type: [string, 'null']
+    format: date
+  pe:
+    type: [number, 'null']
+  pb:
+    type: [number, 'null']
+  roe:
+    type: [number, 'null']
+  roa:
+    type: [number, 'null']
+  eps:
+    type: [number, 'null']
+    description: Lãi cơ bản trên cổ phiếu, tính bằng đồng.
+  marketCapVnd:
+    type: [integer, 'null']
+    format: int64
+    description: Vốn hóa tính bằng đồng.
+  provenance:
+    $ref: './Provenance.yaml'

@@ -1,0 +1,17 @@
+get:
+  operationId: getStatusContent
+  summary: Banner sự cố đang hiển thị
+  tags: [content]
+  security: []
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Các thông báo sự cố đang hoạt động.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/StatusMessageList.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

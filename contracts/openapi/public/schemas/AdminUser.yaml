@@ -1,0 +1,23 @@
+type: object
+required: [id, email, status, role, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  email:
+    type: string
+    format: email
+  displayName:
+    type: [string, 'null']
+  status:
+    type: string
+    enum: [PENDING_VERIFICATION, ACTIVE, SUSPENDED, DELETION_REQUESTED, DELETED]
+  role:
+    type: string
+    enum: [USER, ADMIN]
+  lockedUntil:
+    type: [string, 'null']
+    format: date-time
+  createdAt:
+    type: string
+    format: date-time

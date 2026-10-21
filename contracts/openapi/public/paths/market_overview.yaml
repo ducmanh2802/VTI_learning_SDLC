@@ -1,0 +1,16 @@
+get:
+  operationId: getMarketOverview
+  summary: Tổng quan thị trường
+  description: Trả chỉ số, độ rộng, top movers và thẻ nhận định; mục thiếu được liệt kê trong `unavailable`.
+  tags: [market]
+  responses:
+    '200':
+      description: Tổng quan thị trường.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MarketOverview.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

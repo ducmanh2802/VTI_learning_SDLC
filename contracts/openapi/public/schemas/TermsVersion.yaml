@@ -1,0 +1,13 @@
+type: object
+required: [version, kind, title, publishedAt]
+properties:
+  version:
+    type: string
+  kind:
+    type: string
+    enum: [TERMS, PRIVACY, DERIVATIVE_RISK]
+  title:
+    type: string
+  publishedAt:
+    type: string
+    format: date-time

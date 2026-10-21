@@ -1,0 +1,21 @@
+type: object
+required: [symbol, conditionType, channels]
+properties:
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  conditionType:
+    type: string
+    enum: [PRICE_GTE, PRICE_LTE, PCT_CHANGE_GTE, PCT_CHANGE_LTE, VOLUME_GTE]
+  threshold:
+    type: number
+    description: Bắt buộc với mọi điều kiện trong R1.
+  channels:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      enum: [IN_APP, EMAIL, PUSH]
+  expiresAt:
+    type: [string, 'null']
+    format: date-time

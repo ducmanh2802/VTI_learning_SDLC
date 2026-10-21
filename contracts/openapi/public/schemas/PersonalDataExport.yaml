@@ -1,0 +1,61 @@
+type: object
+required: [exportedAt, profile, consents, watchlists, alerts, paperOrders]
+properties:
+  exportedAt:
+    type: string
+    format: date-time
+  profile:
+    $ref: './UserProfile.yaml'
+  consents:
+    type: array
+    items:
+      $ref: './Consent.yaml'
+  watchlists:
+    type: array
+    items:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        symbols:
+          type: array
+          items:
+            type: string
+  alerts:
+    type: array
+    items:
+      type: object
+      required: [id, symbol, conditionType, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        symbol:
+          type: string
+        conditionType:
+          type: string
+        status:
+          type: string
+  paperOrders:
+    type: array
+    items:
+      type: object
+      required: [id, symbol, side, orderType, quantity, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        symbol:
+          type: string
+        side:
+          type: string
+        orderType:
+          type: string
+        quantity:
+          type: integer
+        status:
+          type: string

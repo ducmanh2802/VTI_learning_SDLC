@@ -1,0 +1,33 @@
+type: object
+required: [email, password, acceptedTerms, consents]
+properties:
+  email:
+    type: string
+    format: email
+    maxLength: 254
+  password:
+    type: string
+    minLength: 10
+    maxLength: 128
+  inviteCode:
+    type: string
+    description: Bắt buộc khi cờ `beta_invite_only` đang bật.
+    minLength: 4
+    maxLength: 64
+  acceptedTerms:
+    type: array
+    description: Phiên bản điều khoản và chính sách người dùng đã chấp thuận.
+    minItems: 1
+    items:
+      type: string
+  consents:
+    type: object
+    description: Lựa chọn ban đầu cho các mục đích tùy chọn; P1 luôn bắt buộc.
+    required: [P2, P3, P4]
+    properties:
+      P2:
+        type: boolean
+      P3:
+        type: boolean
+      P4:
+        type: boolean

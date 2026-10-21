@@ -1,0 +1,69 @@
+type: object
+required: [interactionId, status, text, citations, facts, labels, provenance]
+properties:
+  interactionId:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum: [PUBLISHED, FALLBACK, REFUSED]
+  text:
+    type: [string, 'null']
+    description: null khi REFUSED hoặc FALLBACK không có văn bản.
+  citations:
+    type: array
+    items:
+      $ref: './Citation.yaml'
+  facts:
+    type: array
+    items:
+      $ref: './Fact.yaml'
+  labels:
+    $ref: './AiLabels.yaml'
+  provenance:
+    $ref: './Provenance.yaml'
+examples:
+  - interactionId: 6f1c2a44-6f0e-4f6a-9d7e-2b8c1d0e3f45
+    status: PUBLISHED
+    text: Giá đóng cửa 125.300 đồng [F1], tăng 1,21% [F2]. RSI(14) ở vùng quá mua theo quy ước [F5].
+    citations:
+      - id: F1
+        label: Giá đóng cửa
+        value: '125300'
+        unit: VND
+        source: KBS
+        asOf: '2026-10-20T15:00:00+07:00'
+    facts:
+      - id: F1
+        label: Giá đóng cửa
+        value: '125300'
+        unit: VND
+        source: KBS
+        asOf: '2026-10-20T15:00:00+07:00'
+    labels:
+      aiGenerated: true
+      notAdvice: true
+    provenance:
+      source: Tính toán
+      asOf: '2026-10-20T15:30:00+07:00'
+      kind: CALCULATED
+      stale: false
+  - interactionId: 8a2d3b55-7a1f-4b7b-8e8f-3c9d2e1f4a56
+    status: FALLBACK
+    text: null
+    citations: []
+    facts:
+      - id: F1
+        label: Giá đóng cửa
+        value: '125300'
+        unit: VND
+        source: KBS
+        asOf: '2026-10-20T15:00:00+07:00'
+    labels:
+      aiGenerated: true
+      notAdvice: true
+    provenance:
+      source: Tính toán
+      asOf: '2026-10-20T15:30:00+07:00'
+      kind: CALCULATED
+      stale: false

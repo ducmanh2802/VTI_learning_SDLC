@@ -1,0 +1,21 @@
+type: object
+required: [id, label, value, unit, source, asOf]
+properties:
+  id:
+    type: string
+    description: Mã dữ kiện dạng F1, F2, ...
+    pattern: '^F[0-9]+$'
+  label:
+    type: string
+  value:
+    type: string
+    description: Giá trị thập phân dạng chuỗi để giữ chính xác.
+  unit:
+    type: string
+  display:
+    type: [string, 'null']
+  source:
+    type: string
+  asOf:
+    type: string
+    format: date-time

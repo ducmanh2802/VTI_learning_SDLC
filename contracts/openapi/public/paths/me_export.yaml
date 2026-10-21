@@ -1,0 +1,15 @@
+post:
+  operationId: exportMyData
+  summary: Xuất dữ liệu cá nhân
+  tags: [identity]
+  responses:
+    '200':
+      description: Dữ liệu cá nhân dạng JSON.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PersonalDataExport.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

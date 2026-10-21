@@ -1,0 +1,20 @@
+get:
+  operationId: getQuote
+  summary: Giá mới nhất
+  description: Trả giá mới nhất kèm provenance. Trả 503 DATA_STALE khi dữ liệu cũ hoặc thiếu.
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+  responses:
+    '200':
+      description: Giá mới nhất.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Quote.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

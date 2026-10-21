@@ -1,0 +1,5 @@
+description: Tài khoản đang bị khóa tạm thời.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

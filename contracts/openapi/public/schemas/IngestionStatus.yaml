@@ -1,0 +1,26 @@
+type: object
+required: [asOf, providers]
+properties:
+  asOf:
+    type: string
+    format: date-time
+  providers:
+    type: array
+    items:
+      type: object
+      required: [name, status, consecutiveFailures, quarantinedRecords]
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [OK, DEGRADED, DOWN]
+        lastSuccessAt:
+          type: [string, 'null']
+          format: date-time
+        consecutiveFailures:
+          type: integer
+          minimum: 0
+        quarantinedRecords:
+          type: integer
+          minimum: 0

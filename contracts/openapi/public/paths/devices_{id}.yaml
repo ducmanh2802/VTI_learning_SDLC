@@ -1,0 +1,13 @@
+delete:
+  operationId: unregisterDevice
+  summary: Hủy đăng ký thiết bị push
+  tags: [notification]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '204':
+      description: Đã hủy đăng ký.
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

@@ -1,0 +1,16 @@
+get:
+  operationId: getHealth
+  summary: Sức khỏe dịch vụ
+  tags: [support]
+  security: []
+  responses:
+    '200':
+      description: Trạng thái tổng hợp.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Health.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

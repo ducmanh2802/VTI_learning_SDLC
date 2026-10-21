@@ -1,0 +1,28 @@
+put:
+  operationId: adminSetFlag
+  summary: Bật hoặc tắt cờ tính năng
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - $ref: '../parameters/FlagKey.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/UpdateFlagRequest.yaml'
+  responses:
+    '200':
+      description: Cờ sau khi cập nhật.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/FeatureFlag.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

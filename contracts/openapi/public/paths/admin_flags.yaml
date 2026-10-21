@@ -1,0 +1,19 @@
+get:
+  operationId: adminListFlags
+  summary: Danh sách cờ tính năng
+  description: Yêu cầu vai trò ADMIN.
+  tags: [admin]
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Các cờ tính năng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/FeatureFlagList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '403':
+      $ref: '../responses/Forbidden.yaml'

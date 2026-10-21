@@ -1,0 +1,21 @@
+post:
+  operationId: acknowledgeDerivativeRisk
+  summary: Xác nhận công bố rủi ro phái sinh
+  tags: [identity]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/DerivativeRiskAckRequest.yaml'
+  responses:
+    '200':
+      description: Đã ghi nhận xác nhận.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/MessageResponse.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

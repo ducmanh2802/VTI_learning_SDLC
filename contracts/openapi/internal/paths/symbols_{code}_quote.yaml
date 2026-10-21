@@ -1,0 +1,20 @@
+get:
+  operationId: internalGetQuote
+  summary: Giá mới nhất
+  tags: [market]
+  parameters:
+    - $ref: '../parameters/SymbolCode.yaml'
+    - $ref: '../parameters/CorrelationId.yaml'
+  responses:
+    '200':
+      description: Giá mới nhất kèm provenance.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Quote.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

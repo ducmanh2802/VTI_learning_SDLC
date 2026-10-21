@@ -1,0 +1,8 @@
+allOf:
+  - $ref: './AiSummary.yaml'
+  - type: object
+    properties:
+      remainingQuota:
+        type: integer
+        minimum: 0
+        description: Số câu hỏi còn lại trong ngày sau lần gọi này.

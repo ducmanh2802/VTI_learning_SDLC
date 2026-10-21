@@ -1,0 +1,32 @@
+type: object
+required: [id, alertId, sessionDate, triggeredAt, quoteSnapshot]
+properties:
+  id:
+    type: integer
+    format: int64
+  alertId:
+    type: string
+    format: uuid
+  sessionDate:
+    type: string
+    format: date
+  triggeredAt:
+    type: string
+    format: date-time
+  quoteSnapshot:
+    type: object
+    required: [price, pct, volume, ts, source]
+    properties:
+      price:
+        type: number
+        multipleOf: 0.01
+      pct:
+        type: number
+      volume:
+        type: integer
+        format: int64
+      ts:
+        type: string
+        format: date-time
+      source:
+        type: string

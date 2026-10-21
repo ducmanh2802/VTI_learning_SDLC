@@ -1,0 +1,30 @@
+get:
+  operationId: listAlertEvents
+  summary: Lịch sử kích hoạt cảnh báo
+  tags: [alerting]
+  parameters:
+    - name: from
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Các lần kích hoạt.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AlertEventList.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

@@ -1,0 +1,10 @@
+post:
+  operationId: logout
+  summary: Đăng xuất
+  description: Thu hồi refresh token của phiên hiện tại và ngừng push cho thiết bị này.
+  tags: [identity]
+  responses:
+    '204':
+      description: Đã đăng xuất.
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

@@ -1,0 +1,10 @@
+post:
+  operationId: logoutAll
+  summary: Đăng xuất mọi phiên
+  description: Thu hồi toàn bộ refresh token của người dùng.
+  tags: [identity]
+  responses:
+    '204':
+      description: Đã thu hồi mọi phiên.
+    '401':
+      $ref: '../responses/Unauthorized.yaml'

@@ -1,0 +1,5 @@
+description: Xung đột trạng thái hoặc vượt giới hạn gói.
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/Problem.yaml'

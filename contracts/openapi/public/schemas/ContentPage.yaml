@@ -1,0 +1,13 @@
+type: object
+required: [key, title, bodyMd, updatedAt]
+properties:
+  key:
+    type: string
+    example: indicator.rsi
+  title:
+    type: string
+  bodyMd:
+    type: string
+  updatedAt:
+    type: string
+    format: date-time

@@ -1,0 +1,48 @@
+type: object
+required: [event, occurredAt, platform]
+properties:
+  event:
+    type: string
+    description: Tên sự kiện theo danh mục PRD 6.2.
+    enum:
+      - landing_viewed
+      - signup_started
+      - signup_completed
+      - email_verified
+      - terms_accepted
+      - consent_changed
+      - session_started
+      - overview_viewed
+      - treemap_drilldown
+      - symbol_viewed
+      - ai_summary_viewed
+      - ai_chat_asked
+      - ai_quota_exhausted
+      - ai_feedback_given
+      - ai_content_reported
+      - watchlist_symbol_added
+      - alert_created
+      - alert_triggered
+      - alert_notification_opened
+      - paper_order_submitted
+      - paper_order_filled
+      - paper_order_rejected
+      - paper_account_halted
+      - paper_account_reset
+      - data_stale_shown
+      - error_shown
+      - push_permission_result
+      - account_deletion_requested
+  occurredAt:
+    type: string
+    format: date-time
+  platform:
+    type: string
+    enum: [web, android, pwa]
+  sessionId:
+    type: [string, 'null']
+    format: uuid
+  properties:
+    type: object
+    description: Thuộc tính không chứa dữ liệu cá nhân; tối đa 2 KB.
+    additionalProperties: true

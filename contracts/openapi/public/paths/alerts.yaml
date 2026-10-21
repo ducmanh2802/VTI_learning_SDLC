@@ -1,0 +1,45 @@
+get:
+  operationId: listAlerts
+  summary: Danh sách cảnh báo
+  tags: [alerting]
+  parameters:
+    - name: status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [ACTIVE, COOLDOWN, PAUSED, EXPIRED]
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Cảnh báo của người dùng.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/AlertList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+post:
+  operationId: createAlert
+  summary: Tạo cảnh báo
+  tags: [alerting]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/CreateAlertRequest.yaml'
+  responses:
+    '201':
+      description: Cảnh báo đã được tạo.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Alert.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '409':
+      $ref: '../responses/Conflict.yaml'

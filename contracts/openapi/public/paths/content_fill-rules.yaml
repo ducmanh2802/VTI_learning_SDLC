@@ -1,0 +1,14 @@
+get:
+  operationId: getFillRulesContent
+  summary: Nội dung quy tắc khớp lệnh giả lập
+  tags: [content]
+  security: []
+  responses:
+    '200':
+      description: Trang quy tắc giả lập.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ContentPage.yaml'
+    '429':
+      $ref: '../responses/TooManyRequests.yaml'

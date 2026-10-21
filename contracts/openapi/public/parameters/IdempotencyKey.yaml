@@ -1,0 +1,7 @@
+name: Idempotency-Key
+in: header
+required: true
+description: UUID do client sinh, dùng để chống trùng khi thử lại.
+schema:
+  type: string
+  format: uuid

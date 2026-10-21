@@ -1,0 +1,8 @@
+allOf:
+  - $ref: './AiSummary.yaml'
+  - type: object
+    required: [refunded]
+    properties:
+      refunded:
+        type: boolean
+        description: true khi lỗi hệ thống và quota đã được hoàn.

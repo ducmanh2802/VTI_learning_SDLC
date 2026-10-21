@@ -1,0 +1,18 @@
+get:
+  operationId: listPaperPositions
+  summary: Vị thế giả lập
+  tags: [paper]
+  parameters:
+    - $ref: '../parameters/Limit.yaml'
+    - $ref: '../parameters/Cursor.yaml'
+  responses:
+    '200':
+      description: Vị thế hiện tại.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PositionList.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

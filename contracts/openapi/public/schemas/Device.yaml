@@ -1,0 +1,12 @@
+type: object
+required: [id, platform, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  platform:
+    type: string
+    enum: [EXPO, WEB_PUSH]
+  createdAt:
+    type: string
+    format: date-time

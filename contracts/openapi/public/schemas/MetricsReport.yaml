@@ -1,0 +1,23 @@
+type: object
+required: [month, generatedAt, metrics]
+properties:
+  month:
+    type: string
+    pattern: '^[0-9]{4}-(0[1-9]|1[0-2])$'
+  generatedAt:
+    type: string
+    format: date-time
+  metrics:
+    type: array
+    items:
+      type: object
+      required: [key, label, value]
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        value:
+          type: number
+        unit:
+          type: [string, 'null']

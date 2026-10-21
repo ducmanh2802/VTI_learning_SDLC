@@ -1,0 +1,38 @@
+patch:
+  operationId: updateAlert
+  summary: Sửa hoặc tạm dừng cảnh báo
+  tags: [alerting]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/UpdateAlertRequest.yaml'
+  responses:
+    '200':
+      description: Cảnh báo sau khi cập nhật.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Alert.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+delete:
+  operationId: deleteAlert
+  summary: Xóa cảnh báo
+  tags: [alerting]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '204':
+      description: Đã xóa.
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

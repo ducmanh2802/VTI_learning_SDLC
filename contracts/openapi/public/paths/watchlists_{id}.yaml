@@ -1,0 +1,38 @@
+patch:
+  operationId: updateWatchlist
+  summary: Đổi tên hoặc sắp xếp danh sách theo dõi
+  tags: [watchlist]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/UpdateWatchlistRequest.yaml'
+  responses:
+    '200':
+      description: Danh sách sau khi cập nhật.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Watchlist.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'
+delete:
+  operationId: deleteWatchlist
+  summary: Xóa danh sách theo dõi
+  tags: [watchlist]
+  parameters:
+    - $ref: '../parameters/Id.yaml'
+  responses:
+    '204':
+      description: Đã xóa.
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '404':
+      $ref: '../responses/NotFound.yaml'

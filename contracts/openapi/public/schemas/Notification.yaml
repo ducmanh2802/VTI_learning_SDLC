@@ -1,0 +1,26 @@
+type: object
+required: [id, kind, title, body, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  kind:
+    type: string
+    enum: [ALERT, SECURITY, ACCOUNT, PAPER, SYSTEM]
+  title:
+    type: string
+    maxLength: 120
+  body:
+    type: string
+    maxLength: 1000
+  deepLink:
+    type: [string, 'null']
+  payload:
+    type: object
+    additionalProperties: true
+  createdAt:
+    type: string
+    format: date-time
+  readAt:
+    type: [string, 'null']
+    format: date-time

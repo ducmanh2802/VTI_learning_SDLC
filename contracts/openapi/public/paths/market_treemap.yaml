@@ -1,0 +1,32 @@
+get:
+  operationId: getMarketTreemap
+  summary: Bản đồ nhiệt
+  tags: [market]
+  parameters:
+    - name: weight
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [VALUE, COUNT, ADVANCERS]
+        default: VALUE
+    - name: dir
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [ALL, UP, DOWN]
+        default: ALL
+  responses:
+    '200':
+      description: Dữ liệu bản đồ nhiệt.
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Treemap.yaml'
+    '400':
+      $ref: '../responses/BadRequest.yaml'
+    '401':
+      $ref: '../responses/Unauthorized.yaml'
+    '503':
+      $ref: '../responses/ServiceUnavailable.yaml'

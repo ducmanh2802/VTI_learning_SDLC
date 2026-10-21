@@ -1,0 +1,12 @@
+type: object
+required: [key, enabled, description, updatedAt]
+properties:
+  key:
+    type: string
+  enabled:
+    type: boolean
+  description:
+    type: string
+  updatedAt:
+    type: string
+    format: date-time

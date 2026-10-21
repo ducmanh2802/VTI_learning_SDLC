@@ -1,0 +1,32 @@
+type: object
+required: [id, symbol, conditionType, channels, status, createdAt]
+properties:
+  id:
+    type: string
+    format: uuid
+  symbol:
+    type: string
+    pattern: '^[A-Z0-9]{2,20}$'
+  conditionType:
+    type: string
+    enum: [PRICE_GTE, PRICE_LTE, PCT_CHANGE_GTE, PCT_CHANGE_LTE, VOLUME_GTE, STRATEGY_SIGNAL]
+  threshold:
+    type: [number, 'null']
+  channels:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      enum: [IN_APP, EMAIL, PUSH]
+  status:
+    type: string
+    enum: [ACTIVE, COOLDOWN, PAUSED, EXPIRED, DELETED]
+  expiresAt:
+    type: [string, 'null']
+    format: date-time
+  lastTriggeredAt:
+    type: [string, 'null']
+    format: date-time
+  createdAt:
+    type: string
+    format: date-time
