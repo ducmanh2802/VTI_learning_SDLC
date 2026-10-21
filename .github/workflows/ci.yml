@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      - "integration/**"
+      - "wp-*"
 
 permissions:
   contents: read
@@ -24,6 +26,7 @@ jobs:
       - name: Run gitleaks
         run: |
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
             -v "$PWD:/repo" \
             -w /repo \
             ghcr.io/gitleaks/gitleaks:v8.24.3 \
@@ -61,6 +64,47 @@ jobs:
         run: |
           docker compose -f infra/docker-compose.yml --env-file infra/.env port postgres 5432 | grep -q '^127.0.0.1:'
           docker compose -f infra/docker-compose.yml --env-file infra/.env port redis 6379 | grep -q '^127.0.0.1:'
+
+      - name: Stop dev infra
+        if: always()
+        run: docker compose -f infra/docker-compose.yml --env-file infra/.env down -v
+
+  db-migrate:
+    name: DB migrate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create dev env file
+        run: cp infra/.env.example infra/.env
+
+      - name: Start PostgreSQL
+        run: docker compose -f infra/docker-compose.yml --env-file infra/.env up -d --wait postgres
+
+      - name: Run migrations
+        run: docker compose -f infra/docker-compose.yml --env-file infra/.env run --rm migrator
+
+      - name: Check baseline tables
+        run: |
+          test "$(docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T postgres psql -U vnstockai -d vnstockai -tAc "SELECT count(*) FROM information_schema.tables WHERE table_schema IN ('core','paper','market','ai','strategy','research') AND table_type='BASE TABLE'" | tr -d '[:space:]')" = "48"
+
+      - name: Check core_svc can read market data
+        run: |
+          test "$(docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T -e PGPASSWORD=change-me-core postgres psql -h localhost -U core_svc -d vnstockai -tAc "SELECT count(*) FROM market.symbols" | tr -d '[:space:]')" = "0"
+
+      - name: Check core_svc cannot write market data
+        run: |
+          docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T -e PGPASSWORD=change-me-core postgres psql -h localhost -U core_svc -d vnstockai -tAc "INSERT INTO market.symbols(code,name,name_search,exchange,kind,source) VALUES ('AAA','a','a','HOSE','STOCK','t')" 2>&1 | grep -q "permission denied for table symbols"
+
+      - name: Check analytics_svc cannot read core schema
+        run: |
+          docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T -e PGPASSWORD=change-me-analytics postgres psql -h localhost -U analytics_svc -d vnstockai -tAc "SELECT count(*) FROM core.users" 2>&1 | grep -q "permission denied for schema core"
+
+      - name: Check baseline feature flag
+        run: |
+          test "$(docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T postgres psql -U vnstockai -d vnstockai -tAc "SELECT enabled FROM core.feature_flags WHERE key='beta_invite_only'" | tr -d '[:space:]')" = "t"
 
       - name: Stop dev infra
         if: always()
