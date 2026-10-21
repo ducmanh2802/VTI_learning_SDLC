@@ -6,25 +6,32 @@ properties:
     pattern: '^[A-Z0-9]{2,20}$'
   price:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
     description: Giá khớp gần nhất; null khi chưa có lệnh khớp trong phiên (không dùng 0).
   ref:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   ceiling:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   floor:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   open:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   high:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   low:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   volume:
     type: [integer, 'null']
@@ -38,6 +45,7 @@ properties:
     description: Giá trị giao dịch tính bằng đồng; null khi nguồn không cung cấp.
   change:
     type: [number, 'null']
+    format: decimal
     multipleOf: 0.01
   pct:
     type: [number, 'null']

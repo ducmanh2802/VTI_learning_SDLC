@@ -1,9 +1,8 @@
-"""Payload models of the internal API.
+"""Payload models of the health endpoints.
 
-These models are hand written for the endpoints that exist in R1. The models
+They mirror `HealthLive` and `Health` of the internal contract. The models
 generated from `contracts/openapi/dist/internal.yaml` live in
-`analytics.api.models_generated` and are added in WP-07 step 4 as soon as the
-contract is bundled.
+`analytics.api.models_generated`.
 """
 
 from enum import StrEnum
@@ -24,15 +23,15 @@ class LiveResponse(BaseModel):
     status: HealthStatus
 
 
-class ComponentStatus(BaseModel):
-    """Health of a single dependency."""
+class ReadyComponents(BaseModel):
+    """Health of each dependency."""
 
-    status: HealthStatus
-    detail: str | None = None
+    db: HealthStatus
+    redis: HealthStatus
 
 
 class ReadyResponse(BaseModel):
     """Payload of `GET /internal/v1/health/ready`."""
 
     status: HealthStatus
-    components: dict[str, ComponentStatus]
+    components: ReadyComponents

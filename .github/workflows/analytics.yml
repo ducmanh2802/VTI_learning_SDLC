@@ -56,21 +56,7 @@ jobs:
       - name: Check the generated models
         if: hashFiles('contracts/openapi/dist/internal.yaml') != ''
         run: |
-          uv run datamodel-codegen \
-            --input ../../contracts/openapi/dist/internal.yaml \
-            --input-file-type openapi \
-            --output src/analytics/api/models_generated.py \
-            --output-model-type pydantic_v2.BaseModel \
-            --target-python-version 3.12 \
-            --snake-case-field \
-            --allow-population-by-field-name \
-            --use-annotated \
-            --use-standard-collections \
-            --use-union-operator \
-            --use-double-quotes \
-            --keep-model-order \
-            --disable-timestamp \
-            --formatters ruff-format ruff-check
+          bash scripts/gen_models.sh
           git diff --exit-code src/analytics/api/models_generated.py
 
       - name: Upload the coverage report

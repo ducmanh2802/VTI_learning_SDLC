@@ -9,8 +9,8 @@ required:
 properties:
   type:
     type: string
-    format: uri
-    description: URI mô tả loại lỗi.
+    format: uri-reference
+    description: Tham chiếu URI tương đối mô tả loại lỗi, dạng `/errors/<mã-lỗi-viết-thường-nối-gạch>` (RFC 9457 cho phép tham chiếu tương đối).
   title:
     type: string
     description: Tiêu đề ngắn, hiển thị được cho người dùng.
@@ -63,7 +63,7 @@ properties:
         message:
           type: string
 example:
-  type: https://api.example.vn/errors/risk-lot-size
+  type: /errors/risk-lot-size
   title: Khối lượng không hợp lệ
   status: 422
   detail: Khối lượng phải là bội số của 100 cổ phiếu.

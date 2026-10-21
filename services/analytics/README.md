@@ -69,33 +69,19 @@ Model pydantic được sinh từ `contracts/openapi/dist/internal.yaml` (file �
 
 ```powershell
 # PowerShell
-pwsh ./scripts/gen_models.ps1
+powershell -NoProfile -File scripts/gen_models.ps1
 ```
 
 ```bash
-# bash
-./scripts/gen_models.sh
+# bash (CI dùng đúng script này)
+bash scripts/gen_models.sh
 ```
 
-Lệnh `datamodel-codegen` tương đương:
+Lệnh `datamodel-codegen` đầy đủ nằm trong hai script trên; khi đổi tùy chọn thì sửa cả hai.
 
-```bash
-uv run datamodel-codegen \
-  --input ../../contracts/openapi/dist/internal.yaml \
-  --input-file-type openapi \
-  --output src/analytics/api/models_generated.py \
-  --output-model-type pydantic_v2.BaseModel \
-  --target-python-version 3.12 \
-  --snake-case-field \
-  --allow-population-by-field-name \
-  --use-annotated \
-  --use-standard-collections \
-  --use-union-operator \
-  --use-double-quotes \
-  --keep-model-order \
-  --disable-timestamp \
-  --formatters ruff-format ruff-check
-```
+- Giá trong hợp đồng khai báo `format: decimal`, nên model sinh ra dùng `Decimal`, không dùng `float`. Tùy chọn `--use-decimal-for-multiple-of` không có tác dụng khi bật `--use-annotated` (datamodel-codegen 0.86), nên không dùng.
+- `--capitalise-enum-members`: thành viên enum viết hoa (`INDEX`), tránh trùng tên phương thức của `str` (`index`, `count`).
+- Pydantic ghi `Decimal` ra JSON dạng chuỗi. Endpoint trả giá phải ghi giá dạng số JSON (WP-13a).
 
 ## Chạy bằng Docker
 

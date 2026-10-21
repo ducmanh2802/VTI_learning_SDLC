@@ -38,8 +38,7 @@ async def test_ready_is_up_when_both_dependencies_answer(
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "UP"
-    assert body["components"]["postgres"]["status"] == "UP"
-    assert body["components"]["redis"]["status"] == "UP"
+    assert body["components"] == {"db": "UP", "redis": "UP"}
 
 
 async def test_ready_is_503_when_redis_is_unreachable(
@@ -84,7 +83,7 @@ async def test_ready_is_503_when_postgres_is_unreachable(
     assert response.status_code == 503
     body = response.json()
     assert body["code"] == "DATA_STALE"
-    assert [error["field"] for error in body["errors"]] == ["postgres"]
+    assert [error["field"] for error in body["errors"]] == ["db"]
     assert "secret" not in response.text
 
 

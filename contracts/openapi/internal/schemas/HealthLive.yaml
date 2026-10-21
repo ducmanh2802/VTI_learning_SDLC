@@ -1,0 +1,7 @@
+type: object
+description: Trạng thái tiến trình; không kiểm tra Postgres hay Redis.
+required: [status]
+properties:
+  status:
+    type: string
+    enum: [UP, DOWN]

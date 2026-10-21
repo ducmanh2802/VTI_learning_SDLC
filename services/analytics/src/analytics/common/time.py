@@ -16,7 +16,13 @@ def utcnow() -> datetime:
 
 
 def to_trading_tz(moment: datetime) -> datetime:
-    """Convert an instant to the trading timezone."""
+    """Convert an instant to the trading timezone.
+
+    A naive datetime is refused: `astimezone` would read it in the host's
+    local timezone, which differs between a dev machine and a container.
+    """
+    if moment.tzinfo is None or moment.utcoffset() is None:
+        raise ValueError("a naive datetime has no instant; attach a timezone first")
     return moment.astimezone(TRADING_TZ)
 
 

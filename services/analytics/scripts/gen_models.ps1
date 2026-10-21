@@ -22,5 +22,6 @@ uv run datamodel-codegen `
   --use-union-operator `
   --use-double-quotes `
   --keep-model-order `
+  --capitalise-enum-members `
   --disable-timestamp `
   --formatters ruff-format ruff-check

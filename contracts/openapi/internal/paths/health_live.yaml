@@ -9,6 +9,6 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../schemas/Health.yaml'
+            $ref: '../schemas/HealthLive.yaml'
     '429':
       $ref: '../responses/TooManyRequests.yaml'

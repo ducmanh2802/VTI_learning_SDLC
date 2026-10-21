@@ -8,7 +8,7 @@ from fastapi import APIRouter, Request
 
 from analytics.api.deps import app_settings
 from analytics.api.errors import ApiError, FieldError
-from analytics.api.schemas import ComponentStatus, HealthStatus, LiveResponse, ReadyResponse
+from analytics.api.schemas import HealthStatus, LiveResponse, ReadyComponents, ReadyResponse
 from analytics.common.errors import ErrorCode
 from analytics.common.health import check_postgres, check_redis
 
@@ -29,13 +29,6 @@ async def ready(request: Request) -> ReadyResponse:
         await check_postgres(settings.analytics_db_url),
         await check_redis(settings.redis_url),
     ]
-    components = {
-        result.name: ComponentStatus(
-            status=HealthStatus.UP if result.healthy else HealthStatus.DOWN,
-            detail=result.detail,
-        )
-        for result in results
-    }
     unhealthy = [result for result in results if not result.healthy]
     if unhealthy:
         names = ", ".join(result.name for result in unhealthy)
@@ -45,4 +38,7 @@ async def ready(request: Request) -> ReadyResponse:
             detail=f"Component not ready: {names}",
             errors=[FieldError(field=result.name, message=result.detail) for result in unhealthy],
         )
-    return ReadyResponse(status=HealthStatus.UP, components=components)
+    return ReadyResponse(
+        status=HealthStatus.UP,
+        components=ReadyComponents(db=HealthStatus.UP, redis=HealthStatus.UP),
+    )

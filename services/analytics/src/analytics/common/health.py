@@ -45,16 +45,16 @@ async def check_postgres(url: str, timeout_seconds: float = PROBE_TIMEOUT_SECOND
             asyncpg.connect(to_asyncpg_dsn(url)), timeout=timeout_seconds
         )
     except Exception as exc:  # the probe must never raise
-        return ProbeResult("postgres", False, _redact(f"{type(exc).__name__}: {exc}"))
+        return ProbeResult("db", False, _redact(f"{type(exc).__name__}: {exc}"))
 
     try:
         await asyncio.wait_for(connection.execute("SELECT 1"), timeout=timeout_seconds)
     except Exception as exc:  # the probe must never raise
-        return ProbeResult("postgres", False, _redact(f"{type(exc).__name__}: {exc}"))
+        return ProbeResult("db", False, _redact(f"{type(exc).__name__}: {exc}"))
     finally:
         with contextlib.suppress(Exception):
             await connection.close()
-    return ProbeResult("postgres", True, "ok")
+    return ProbeResult("db", True, "ok")
 
 
 async def check_redis(url: str, timeout_seconds: float = PROBE_TIMEOUT_SECONDS) -> ProbeResult:

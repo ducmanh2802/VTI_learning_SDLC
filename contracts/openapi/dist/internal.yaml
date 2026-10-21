@@ -502,7 +502,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Health'
+                $ref: '#/components/schemas/HealthLive'
         '429':
           $ref: '#/components/responses/TooManyRequests'
   /health/ready:
@@ -650,7 +650,8 @@ components:
       properties:
         type:
           type: string
-          format: uri
+          format: uri-reference
+          description: Tham chiếu URI tương đối, dạng `/errors/<mã-lỗi-viết-thường-nối-gạch>`.
         title:
           type: string
         status:
@@ -754,37 +755,44 @@ components:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
           description: Giá khớp gần nhất; null khi chưa có lệnh khớp trong phiên (không dùng 0).
         ref:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         ceiling:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         floor:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         open:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         high:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         low:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         volume:
           type:
@@ -804,6 +812,7 @@ components:
           type:
             - number
             - 'null'
+          format: decimal
           multipleOf: 0.01
         pct:
           type:
@@ -826,6 +835,7 @@ components:
       properties:
         price:
           type: number
+          format: decimal
           multipleOf: 0.01
         volume:
           type: integer
@@ -875,15 +885,19 @@ components:
           format: date
         open:
           type: number
+          format: decimal
           multipleOf: 0.01
         high:
           type: number
+          format: decimal
           multipleOf: 0.01
         low:
           type: number
+          format: decimal
           multipleOf: 0.01
         close:
           type: number
+          format: decimal
           multipleOf: 0.01
         volume:
           type: integer
@@ -1010,6 +1024,7 @@ components:
           pattern: ^[A-Z0-9]{2,20}$
         price:
           type: number
+          format: decimal
           multipleOf: 0.01
         pct:
           type: number
@@ -1053,6 +1068,7 @@ components:
                 type: string
               value:
                 type: number
+                format: decimal
                 multipleOf: 0.01
               change:
                 type: number
@@ -1453,6 +1469,17 @@ components:
               quarantinedRecords:
                 type: integer
                 minimum: 0
+    HealthLive:
+      type: object
+      description: Trạng thái tiến trình; không kiểm tra Postgres hay Redis.
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - UP
+            - DOWN
     Health:
       type: object
       required:

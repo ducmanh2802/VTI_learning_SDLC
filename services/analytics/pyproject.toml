@@ -92,6 +92,8 @@ filterwarnings = ["error"]
 [tool.coverage.run]
 source = ["analytics"]
 branch = false
+# Generated from the contract; its behaviour is pydantic's, not ours.
+omit = ["*/analytics/api/models_generated.py"]
 
 [tool.coverage.report]
 show_missing = true

@@ -19,6 +19,7 @@ properties:
           type: string
         value:
           type: number
+          format: decimal
           multipleOf: 0.01
         change:
           type: number

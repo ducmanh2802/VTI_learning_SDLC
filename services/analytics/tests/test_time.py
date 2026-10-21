@@ -48,6 +48,13 @@ def test_trading_date_rolls_over_at_midnight_in_vietnam() -> None:
     assert trading_date(moment) == date(2026, 10, 21)
 
 
+def test_naive_datetimes_are_rejected() -> None:
+    with pytest.raises(ValueError):
+        to_trading_tz(datetime(2026, 10, 20, 17, 0))
+    with pytest.raises(ValueError):
+        trading_date(datetime(2026, 10, 20, 17, 0))
+
+
 @pytest.mark.parametrize("value", ["2026-10-20", 20261020])
 def test_invalid_inputs_are_rejected(value: object) -> None:
     with pytest.raises((TypeError, AttributeError, ValueError)):
