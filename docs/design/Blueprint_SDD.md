@@ -502,7 +502,7 @@ Các module chỉ gọi nhau qua package `..api` hoặc qua Spring application e
 | notification | shared, consent.api |
 | quotes | shared |
 | marketgw | shared, identity.api, consent.api (cổng rủi ro phái sinh FR-015; bổ sung khi viết WP-13b) |
-| watchlist | shared, marketgw.api |
+| watchlist | shared, marketgw.api, quotes.api (giá hàng loạt từ Redis cho FR-082; bổ sung khi viết WP-17) |
 | alerting | shared, quotes.api, notification.api, marketgw.api |
 | paper | shared, quotes.api, marketgw.api |
 | admin | shared, identity.api, consent.api, marketgw.api |
