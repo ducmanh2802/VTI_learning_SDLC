@@ -56,6 +56,8 @@ Commands become available as WPs land. Use the ones that exist. Never mark a ste
 | Dev infra up | `docker compose -f infra/docker-compose.yml --env-file infra/.env up -d --wait` | WP-00 |
 | Dev infra down | `docker compose -f infra/docker-compose.yml --env-file infra/.env down` | WP-00 |
 | Migrations | `docker compose -f infra/docker-compose.yml --env-file infra/.env run --rm migrator` | WP-01 |
+| Contracts lint | `npx --yes @redocly/cli@1 lint --config contracts/openapi/redocly.yaml` | WP-02 |
+| Contracts bundle (after any contract edit) | `npx --yes @redocly/cli@1 bundle public --config contracts/openapi/redocly.yaml -o contracts/openapi/dist/public.yaml` (same for `internal`) | WP-02 |
 | Core build + tests | `cd services/core && ./gradlew build` (Windows: `gradlew.bat build`) | WP-03 |
 | Analytics tests | `cd services/analytics && uv run pytest` | WP-07 |
 | Analytics lint/types/layers | `uv run ruff check . && uv run mypy . && uv run lint-imports` | WP-07 |
@@ -84,7 +86,7 @@ Local env: copy `infra/.env.example` to `infra/.env` (git-ignored) and change th
 - **Single writer per DB schema:** Core writes `core`, `paper`, `strategy`. Analytics writes `market`, `ai`, `research`. Never write another service's schema.
 - Only Core is reachable from the Internet. Analytics listens on the internal Docker network and requires `X-Service-Token`.
 - External providers (market data, LLM, email, push) are used only through their port/adapter interfaces (SC-010). Domain code never imports a vendor SDK directly.
-- APIs follow the OpenAPI contracts in `contracts/openapi`. Errors use RFC 9457 `application/problem+json` with a stable `code` (list: SDD 3.6.1).
+- APIs follow the OpenAPI contracts in `contracts/openapi`. The sources are split into small files under `public/` and `internal/`; code generation and tests read the bundled `contracts/openapi/dist/*.yaml`. Never edit `dist/` by hand: re-bundle it. Errors use RFC 9457 `application/problem+json` with a stable `code` (list: SDD 3.6.1).
 - Schema changes go in a **new** Flyway migration `db/migrations/V<n>__<name>.sql`. Never edit an applied migration.
 
 ## 7. Domain rules
