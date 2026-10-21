@@ -10,6 +10,7 @@ properties:
   pct:
     type: number
   volume:
-    type: integer
+    type: [integer, 'null']
     format: int64
     minimum: 0
+    description: Khối lượng khớp trong phiên; null khi nguồn không cung cấp (ví dụ vnstock cấp Guest).

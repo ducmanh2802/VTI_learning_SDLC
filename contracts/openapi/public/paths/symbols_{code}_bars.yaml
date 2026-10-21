@@ -1,6 +1,9 @@
 get:
   operationId: getBars
   summary: Nến giá
+  description: |
+    Trả toàn bộ nến trong khoảng [from, to], sắp xếp tăng dần theo ngày, không phân trang
+    (biểu đồ cần cả chuỗi). Khoảng tối đa 5 năm; vượt quá trả 400 VALIDATION_ERROR.
   tags: [market]
   parameters:
     - $ref: '../parameters/SymbolCode.yaml'
@@ -23,8 +26,6 @@ get:
       schema:
         type: string
         format: date
-    - $ref: '../parameters/Limit.yaml'
-    - $ref: '../parameters/Cursor.yaml'
   responses:
     '200':
       description: Danh sách nến trong khoảng yêu cầu.

@@ -1,6 +1,9 @@
 get:
   operationId: internalGetBars
   summary: Nến giá
+  description: |
+    Trả toàn bộ nến trong khoảng [from, to], sắp xếp tăng dần theo ngày, không phân trang.
+    Khoảng tối đa 5 năm; vượt quá trả 400 VALIDATION_ERROR.
   tags: [market]
   parameters:
     - $ref: '../parameters/SymbolCode.yaml'
@@ -23,8 +26,6 @@ get:
       schema:
         type: string
         format: date
-    - $ref: '../parameters/Limit.yaml'
-    - $ref: '../parameters/Cursor.yaml'
     - $ref: '../parameters/CorrelationId.yaml'
   responses:
     '200':

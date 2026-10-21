@@ -5,5 +5,3 @@ properties:
     type: array
     items:
       $ref: './Bar.yaml'
-  nextCursor:
-    type: [string, 'null']

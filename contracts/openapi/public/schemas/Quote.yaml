@@ -5,8 +5,9 @@ properties:
     type: string
     pattern: '^[A-Z0-9]{2,20}$'
   price:
-    type: number
+    type: [number, 'null']
     multipleOf: 0.01
+    description: Giá khớp gần nhất; null khi chưa có lệnh khớp trong phiên (không dùng 0).
   ref:
     type: [number, 'null']
     multipleOf: 0.01
@@ -27,14 +28,15 @@ properties:
     type: [number, 'null']
     multipleOf: 0.01
   volume:
-    type: integer
+    type: [integer, 'null']
     format: int64
     minimum: 0
+    description: Khối lượng khớp lũy kế; null khi nguồn không cung cấp (ví dụ vnstock cấp Guest).
   value:
-    type: integer
+    type: [integer, 'null']
     format: int64
     minimum: 0
-    description: Giá trị giao dịch tính bằng đồng.
+    description: Giá trị giao dịch tính bằng đồng; null khi nguồn không cung cấp.
   change:
     type: [number, 'null']
     multipleOf: 0.01

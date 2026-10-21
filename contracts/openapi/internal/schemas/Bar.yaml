@@ -24,8 +24,9 @@ properties:
     format: int64
     minimum: 0
   value:
-    type: integer
+    type: [integer, 'null']
     format: int64
     minimum: 0
+    description: Giá trị giao dịch tính bằng đồng; null khi nguồn không cung cấp (market.daily_bars.value).
   provenance:
     $ref: './Provenance.yaml'

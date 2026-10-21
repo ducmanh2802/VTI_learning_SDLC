@@ -51,7 +51,7 @@ example:
   fill:
     quantity: 100
     price: 124000
-    fee: 186000
+    fee: 18600
     tax: 0
     filledAt: '2026-10-20T10:20:05+07:00'
   createdAt: '2026-10-20T10:20:04+07:00'
