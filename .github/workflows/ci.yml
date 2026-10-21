@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run gitleaks
+        run: |
+          docker run --rm \
+            -v "$PWD:/repo" \
+            -w /repo \
+            ghcr.io/gitleaks/gitleaks:v8.24.3 \
+            detect --source . --no-banner --redact --exit-code 1
+
+  compose-smoke:
+    name: Compose smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create dev env file
+        run: cp infra/.env.example infra/.env
+
+      - name: Validate compose file
+        run: docker compose -f infra/docker-compose.yml --env-file infra/.env config --quiet
+
+      - name: Start dev infra
+        run: docker compose -f infra/docker-compose.yml --env-file infra/.env up -d --wait --wait-timeout 120
+
+      - name: Check PostgreSQL
+        run: |
+          docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T postgres pg_isready -U vnstockai -d vnstockai
+          test "$(docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T postgres psql -U vnstockai -d vnstockai -tAc 'SHOW shared_buffers' | tr -d '[:space:]')" = "768MB"
+
+      - name: Check Redis
+        run: |
+          test "$(docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T redis redis-cli ping | tr -d '[:space:]')" = "PONG"
+          docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T redis sh -c 'REDISCLI_AUTH= redis-cli ping' | grep -q NOAUTH
+          test "$(docker compose -f infra/docker-compose.yml --env-file infra/.env exec -T redis redis-cli CONFIG GET maxmemory-policy | tail -n 1 | tr -d '[:space:]')" = "volatile-lru"
+
+      - name: Check localhost ports
+        run: |
+          docker compose -f infra/docker-compose.yml --env-file infra/.env port postgres 5432 | grep -q '^127.0.0.1:'
+          docker compose -f infra/docker-compose.yml --env-file infra/.env port redis 6379 | grep -q '^127.0.0.1:'
+
+      - name: Stop dev infra
+        if: always()
+        run: docker compose -f infra/docker-compose.yml --env-file infra/.env down -v
