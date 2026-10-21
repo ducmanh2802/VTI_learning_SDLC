@@ -15,8 +15,8 @@ Quy tắc chung cho agent nằm ở [AGENTS.md](../../AGENTS.md). Danh sách đ�
 |---|---|---|---|
 | WP-00 | Khung repo, hạ tầng dev, CI cơ bản | [WP-00.md](WP-00.md) | **PASS**, đã merge vào `integration/r1` ([audit](reports/WP-00-audit.md)) |
 | WP-01 | Migration baseline, migrator, role dịch vụ | [WP-01.md](WP-01.md) | **PASS**, đã merge ([audit](reports/WP-01-audit.md)); CI xanh trên `integration/r1` |
-| WP-02 | Hợp đồng OpenAPI và sự kiện | [WP-02.md](WP-02.md) | Đang giao lại, bản sửa 2: chia thành nhiều file nhỏ. Lần 1 dừng vì 151 lỗi lint |
-| WP-03 | Khung Core (Spring Boot 4) | [WP-03.md](WP-03.md) | Chờ WP-02 |
+| WP-02 | Hợp đồng OpenAPI và sự kiện | [WP-02.md](WP-02.md) | **PASS** sau 3 sửa của audit, đã merge ([audit](reports/WP-02-audit.md)) |
+| WP-03 | Khung Core (Spring Boot 4) | [WP-03.md](WP-03.md) | Đang giao |
 | WP-04 | Identity | [WP-04.md](WP-04.md) | Chờ WP-03 |
 | WP-05 | Consent | [WP-05.md](WP-05.md) | Chờ WP-04 |
 | WP-06 | Admin | [WP-06.md](WP-06.md) | Chờ WP-04 |
